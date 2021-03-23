@@ -1,22 +1,23 @@
 <h1 align="center">
-    Festivals Identity Server
+    Festivals Gateway Server
 </h1>
 
 <p align="center">
-   <a href="https://github.com/festivals-app/festivals-identity-server/commits/" title="Last Commit"><img src="https://img.shields.io/github/last-commit/festivals-app/festivals-identity-server?style=flat"></a>
-   <a href="https://github.com/festivals-app/festivals-identity-server/issues" title="Open Issues"><img src="https://img.shields.io/github/issues/festivals-app/festivals-identity-server?style=flat"></a>
-   <a href="./LICENSE" title="License"><img src="https://img.shields.io/github/license/festivals-app/festivals-identity-server.svg"></a>
+   <a href="https://github.com/festivals-app/festivals-gateway/commits/" title="Last Commit"><img src="https://img.shields.io/github/last-commit/festivals-app/festivals-gateway?style=flat"></a>
+   <a href="https://github.com/festivals-app/festivals-gateway/issues" title="Open Issues"><img src="https://img.shields.io/github/issues/festivals-app/festivals-gateway?style=flat"></a>
+   <a href="./LICENSE" title="License"><img src="https://img.shields.io/github/license/festivals-app/festivals-gateway.svg"></a>
 </p>
 
 <p align="center">
   <a href="#development">Development</a> •
-  <a href="#usage">Usage</a> •
   <a href="#deployment">Deployment</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#documentation">Documentation</a> •
   <a href="#engage">Engage</a> •
   <a href="#licensing">Licensing</a>
 </p>
 
-A live and lightweight go server app providing a simple RESTful API using [go-chi/chi](https://github.com/go-chi/chi) and [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql).
+The service gateway for the FestivalsAPI, providing access to the [FestivalsAPI](https://github.com/Festivals-App/festivals-server), [Website](https://github.com/Festivals-App/festivals-website), [static file server](https://github.com/Festivals-App/festivals-fileserver) and the [identity service](https://github.com/Festivals-App/festivals-identity-server).
 
 ## Development
 
@@ -24,9 +25,21 @@ TBA
 
 ### Requirements
 
--  go 1.11
+TBA
 
-### Setup development
+### Setup
+
+TBA
+
+## Deployment
+
+### Server
+
+All of the scripts require Ubuntu 20 LTS as the operating system and that the server has already been initialised, see the steps to do that [here](https://github.com/Festivals-App/festivals-documentation/tree/master/deployment/general-vm-setup).
+
+TBA
+
+### Docker
 
 TBA
 
@@ -34,76 +47,12 @@ TBA
 
 TBA
 
-### Structure
-```
-├── server
-│   ├── server.go               // server logic
-│   │
-│   ├── handler                 // API handlers
-│   │   ├── common.go           // Common response functions
-│   │   ├── image.go            // APIs for handling images
-│   │   └── status.go           // APIs getting server status information
-│   │
-│   └── manipulate
-│       ├── resize.go            // APIs for resizing images
-│       └── toolbox.go           // Misc funktions
-│
-├── config
-│   └── config.go               // Configuration
-│
-└── main.go               
-```
 ### Documentation
 
-The FestivalsIdentityAPI is documented in detail [here](./DOCUMENTATION.md).
+The gateway is documented in detail [here](./DOCUMENTATION.md).
 
 The full documentation for the Festivals App is in the [festivals-documentation](https://github.com/festivals-app/festivals-documentation) repository. 
 The documentation repository contains technical documents, architecture information, UI/UX specifications, and whitepapers related to this implementation.
-
-## Deployment
-
-The install, update and uninstall scripts should work with any system that uses *systemd* and *firewalld* or *ufw*. 
-Additionally the scripts will somewhat work under macOS but won't configure the firewall or launch service.
-
-Installing
-```bash
-curl -o install.sh https://raw.githubusercontent.com/Festivals-App/festivals-fileserver/master/operation/install.sh
-chmod +x install.sh
-sudo ./install.sh
-```
-Updating
-```bash
-curl -o update.sh https://raw.githubusercontent.com/Festivals-App/festivals-fileserver/master/operation/update.sh
-chmod +x update.sh
-sudo ./update.sh
-```
-Uninstalling
-```bash
-curl -o uninstall.sh https://raw.githubusercontent.com/Festivals-App/festivals-fileserver/master/operation/uninstall.sh
-chmod +x uninstall.sh
-sudo ./uninstall.sh
-```
-
-### Docker
-
-```bash
-TBA
-```
-
-### macOS
-
-```bash
-TBA
-```
-
-### Build and Run manually
-```bash
-cd $GOPATH/src/github.com/Festivals-App/festivals-fileserver
-go build main.go
-./main
-
-# Default API Endpoint : http://localhost:1910
-```
 
 ## Engage
 
