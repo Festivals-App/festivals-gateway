@@ -1,0 +1,6 @@
+# festivals-server configuration file v1.0
+# TOML 1.0.0-rc.2+
+
+  [service]
+  read-only = false
+  port = 10439
