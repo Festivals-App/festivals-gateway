@@ -15,7 +15,7 @@ type Heartbeat struct {
 	Available bool   `json:"available"`
 }
 
-func SendHeartbeat(url string, beat *Heartbeat) {
+func SendHeartbeat(url string, beat Heartbeat) {
 
 	heartbeatwave, err := json.Marshal(beat)
 	if err != nil {
