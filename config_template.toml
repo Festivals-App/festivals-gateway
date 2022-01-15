@@ -1,6 +1,9 @@
-# festivals-server configuration file v1.0
+# festivals-gateway configuration file v1.0
 # TOML 1.0.0-rc.2+
 
-  [service]
-  read-only = false
-  port = 10439
+[service]
+bind-address = "localhost"
+port = 8080
+
+[authentication]
+api-keys = ["TEST_API_KEY_001", "TEST_API_KEY_002", "TEST_API_KEY_003"]
