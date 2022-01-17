@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/handler"
@@ -37,7 +38,7 @@ func (s *Server) setMiddleware() {
 	// tell the ruter which middleware to use
 	s.Router.Use(
 		// used to log the request to the console | development
-		middleware.Logger,
+		//middleware.Logger,
 		// tries to recover after panics
 		middleware.Recoverer,
 	)
@@ -59,10 +60,12 @@ func (s *Server) setRoutes() {
 
 	hr := hostrouter.New()
 
-	hr.Map("localhost:8080", GetGatewayRouter(s))
-	hr.Map("discovery.localhost:8080", GetDiscoveryRouter(s))
-	hr.Map("api.localhost:8080", GetFestivalsAPIRouter(s))
-	hr.Map("files.localhost:8080", GetFestivalsFilesAPIRouter(s))
+	base := s.Config.ServiceBindHost + ":" + strconv.Itoa(s.Config.ServicePort)
+
+	hr.Map(base, GetGatewayRouter(s))
+	hr.Map("discovery."+base, GetDiscoveryRouter(s))
+	hr.Map("api."+base, GetFestivalsAPIRouter(s))
+	hr.Map("files."+base, GetFestivalsFilesAPIRouter(s))
 
 	// Mount the host router
 	s.Router.Mount("/", hr)
