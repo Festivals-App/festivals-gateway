@@ -9,6 +9,7 @@ import (
 
 type Config struct {
 	ServiceBindAddress string
+	ServiceBindHost    string
 	ServicePort        int
 	APIKeys            []string
 }
@@ -41,6 +42,7 @@ func ParseConfig(cfgFile string) *Config {
 	}
 
 	serverBindAdress := content.Get("service.bind-address").(string)
+	serverBindHost := content.Get("service.bind-host").(string)
 	serverPort := content.Get("service.port").(int64)
 
 	keyValues := content.Get("authentication.api-keys").([]interface{})
@@ -51,6 +53,7 @@ func ParseConfig(cfgFile string) *Config {
 
 	return &Config{
 		ServiceBindAddress: serverBindAdress,
+		ServiceBindHost:    serverBindHost,
 		ServicePort:        int(serverPort),
 		APIKeys:            keys,
 	}

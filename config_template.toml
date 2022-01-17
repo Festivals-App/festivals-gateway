@@ -3,6 +3,7 @@
 
 [service]
 bind-address = "localhost"
+bind-host = "localhost"
 port = 8080
 
 [authentication]
