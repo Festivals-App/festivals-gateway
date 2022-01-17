@@ -1,33 +1,37 @@
 package handler
 
 import (
+	"math/rand"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"sync"
+	"time"
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 )
 
-type Backend struct {
-	URL          *url.URL
-	Alive        bool
-	mux          sync.RWMutex
-	ReverseProxy *httputil.ReverseProxy
-}
-
-type ServerPool struct {
-	backends []*Backend
-	current  uint64
-}
-
 func GoToFestivalsAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
-	//respondString(w, http.StatusOK, "FESTIVALS_API")
+	pool, exists := ServicePools["festivals-server"]
+	if !exists {
+		respondError(w, http.StatusServiceUnavailable, "No available backend server")
+		return
+	}
 
-	u, _ := url.Parse("http://localhost:10439")
-	rp := httputil.NewSingleHostReverseProxy(u)
+	services := pool.Services
+
+	rand.Seed(time.Now().Unix()) // initialize global pseudo random generator
+	service := services[rand.Intn(len(services))]
+
+	url, err := url.Parse(service.URL)
+	if err != nil {
+		respondError(w, http.StatusServiceUnavailable, "Backend server address not reasonable.")
+		return
+	}
+
+	rp := httputil.NewSingleHostReverseProxy(url)
 	rp.ServeHTTP(w, r)
+
 }
 
 func GoToFestivalsFilesAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {

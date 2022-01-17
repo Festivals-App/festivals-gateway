@@ -1,37 +1,72 @@
 package handler
 
 import (
-	"bytes"
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
+	"github.com/Festivals-App/festivals-gateway/server/heartbeat"
 )
+
+type Service struct {
+	Name  string
+	URL   string
+	At    time.Time
+	Alive bool
+}
+
+type ServicePool struct {
+	Services []Service
+	Current  uint64
+}
+
+var ServicePools map[string]ServicePool = map[string]ServicePool{}
 
 func ReceivedHeartbeat(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
-	printBody(r)
-	respondCode(w, http.StatusAccepted)
-}
-
-func LogHeartbeat(conf *config.Config, w http.ResponseWriter, r *http.Request) {
-
-	fmt.Println(r)
-	respondCode(w, http.StatusAccepted)
-}
-
-func printBody(r *http.Request) {
-
-	buf, bodyErr := ioutil.ReadAll(r.Body)
-	if bodyErr != nil {
-		log.Print("bodyErr ", bodyErr.Error())
+	var beat heartbeat.Heartbeat
+	err := json.NewDecoder(r.Body).Decode(&beat)
+	if err != nil {
+		respondError(w, http.StatusBadRequest, "Failed to read heartbeat!")
 		return
 	}
 
-	rdr1 := ioutil.NopCloser(bytes.NewBuffer(buf))
-	rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf))
-	log.Printf("BODY: %q", rdr1)
-	r.Body = rdr2
+	service := Service{Name: beat.Service, URL: "http://" + beat.Host + ":" + strconv.Itoa(beat.Port), At: time.Now(), Alive: beat.Available}
+	registerService(service)
+	respondCode(w, http.StatusAccepted)
+}
+
+func registerService(service Service) {
+
+	servicePool, exists := ServicePools[service.Name]
+	if !exists {
+		fmt.Printf("Initially created service pool for: %+v\n", service.Name)
+		ServicePools[service.Name] = ServicePool{Services: []Service{}, Current: 0}
+		registerService(service)
+	} else {
+
+		known, index := knownInstance(service, servicePool.Services)
+		if known {
+			servicePool.Services[index] = service
+			fmt.Printf("Replaced instance: %+v\n", service)
+
+		} else {
+			fmt.Printf("Initially added: %+v\n", service)
+			servicePool.Services = append(servicePool.Services, service)
+		}
+
+		ServicePools[service.Name] = servicePool
+	}
+}
+
+func knownInstance(service Service, list []Service) (bool, int) {
+	for i, member := range list {
+		if member.URL == service.URL {
+			return true, i
+		}
+	}
+	return false, -1
 }
