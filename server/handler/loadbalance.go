@@ -5,10 +5,35 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"sync"
 	"sync/atomic"
+	"time"
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 )
+
+type Service struct {
+	Name         string
+	URL          *url.URL
+	At           time.Time
+	Alive        bool
+	mux          sync.RWMutex
+	ReverseProxy *httputil.ReverseProxy
+}
+
+func (s *Service) IsAlive() (alive bool) {
+	s.mux.RLock()
+	alive = s.Alive
+	s.mux.RUnlock()
+	return
+}
+
+type ServicePool struct {
+	Services []*Service
+	Current  uint64
+}
+
+var ServicePools map[string]*ServicePool = map[string]*ServicePool{}
 
 func GoToFestivalsAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
