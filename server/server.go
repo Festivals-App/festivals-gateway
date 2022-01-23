@@ -84,6 +84,7 @@ func GetDiscoveryRouter(s *Server) chi.Router {
 
 	r := chi.NewRouter()
 	r.Post("/loversear", s.handleRequestWithoutAuthentication(handler.ReceivedHeartbeat))
+	r.Get("/services", s.handleRequestWithoutAuthentication(handler.GetServices))
 	return r
 }
 
