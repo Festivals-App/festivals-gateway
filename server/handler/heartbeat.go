@@ -10,6 +10,7 @@ import (
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/heartbeat"
+	"github.com/Festivals-App/festivals-gateway/server/loadbalancer"
 )
 
 func ReceivedHeartbeat(conf *config.Config, w http.ResponseWriter, r *http.Request) {
@@ -27,44 +28,29 @@ func ReceivedHeartbeat(conf *config.Config, w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	service := &Service{Name: beat.Service, URL: url, At: time.Now(), Alive: beat.Available}
-	registerService(service)
+	service := &loadbalancer.Service{Name: beat.Service, URL: url, At: time.Now(), Alive: beat.Available}
+	go registerService(service)
 	respondCode(w, http.StatusAccepted)
 }
 
-func registerService(service *Service) {
+func registerService(service *loadbalancer.Service) {
+
+	servicePoolMux.Lock()
 
 	servicePool, exists := ServicePools[service.Name]
+
 	if !exists {
+
 		fmt.Printf("Initially created service pool for: %+v\n", service.Name)
-		ServicePools[service.Name] = &ServicePool{Services: []*Service{}, Current: 0}
+		ServicePools[service.Name] = &loadbalancer.ServicePool{Services: []*loadbalancer.Service{}, Current: 0}
+
+		servicePoolMux.Unlock()
+
 		registerService(service)
 	} else {
 
-		known, index := knownInstance(service, servicePool.Services)
-		if known {
-			servicePool.Services[index].At = time.Now()
-			fmt.Printf("Updated instance: %+v\n", service)
+		servicePoolMux.Unlock()
 
-		} else {
-			fmt.Printf("Initially added: %+v\n", service)
-			servicePool.Services = append(servicePool.Services, service)
-		}
-
-		ServicePools[service.Name] = servicePool
+		servicePool.UpdateService(service)
 	}
-}
-
-func knownInstance(service *Service, list []*Service) (bool, int) {
-
-	for i, member := range list {
-
-		a := member.URL
-		b := service.URL
-
-		if *a == *b {
-			return true, i
-		}
-	}
-	return false, -1
 }

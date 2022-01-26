@@ -6,34 +6,15 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"sync"
-	"sync/atomic"
-	"time"
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
+	"github.com/Festivals-App/festivals-gateway/server/loadbalancer"
 )
 
-type Service struct {
-	Name         string
-	URL          *url.URL
-	At           time.Time
-	Alive        bool
-	mux          sync.RWMutex
-	ReverseProxy *httputil.ReverseProxy
-}
+var ServicePools map[string]*loadbalancer.ServicePool = map[string]*loadbalancer.ServicePool{}
+var servicePoolMux sync.RWMutex
 
-func (s *Service) IsAlive() (alive bool) {
-	s.mux.RLock()
-	alive = s.Alive
-	s.mux.RUnlock()
-	return
-}
-
-type ServicePool struct {
-	Services []*Service
-	Current  uint64
-}
-
-var ServicePools map[string]*ServicePool = map[string]*ServicePool{}
+var Pools sync.Map
 
 func GoToFestivalsAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
@@ -61,6 +42,9 @@ func GoToFestivalsFilesAPI(conf *config.Config, w http.ResponseWriter, r *http.R
 
 func loadbalancedHost(serviceIdentifier string) (*url.URL, error) {
 
+	servicePoolMux.RLock()
+	defer servicePoolMux.RUnlock()
+
 	pool, exists := ServicePools[serviceIdentifier]
 	if !exists {
 		return nil, errors.New("loadbalancer: no available backend server for " + serviceIdentifier)
@@ -72,26 +56,4 @@ func loadbalancedHost(serviceIdentifier string) (*url.URL, error) {
 	}
 
 	return nil, errors.New("loadbalancer: no available backend server for " + serviceIdentifier)
-}
-
-func (s *ServicePool) NextIndex() int {
-	return int(atomic.AddUint64(&s.Current, uint64(1)) % uint64(len(s.Services)))
-}
-
-// GetNextPeer returns next active peer to take a connection
-func (s *ServicePool) GetNextPeer() *Service {
-	// loop entire backends to find out an Alive backend
-	next := s.NextIndex()
-	l := len(s.Services) + next // start from next and move a full cycle
-	for i := next; i < l; i++ {
-		idx := i % len(s.Services) // take an index by modding with length
-		// if we have an alive backend, use it and store if its not the original one
-		if s.Services[idx].IsAlive() {
-			if i != next {
-				atomic.StoreUint64(&s.Current, uint64(idx)) // mark the current one
-			}
-			return s.Services[idx]
-		}
-	}
-	return nil
 }

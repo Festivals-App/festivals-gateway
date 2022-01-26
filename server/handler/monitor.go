@@ -11,15 +11,16 @@ func GetServices(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
 	var nodes []status.MonitorNode = []status.MonitorNode{}
 
+	servicePoolMux.RLock()
+
 	for _, element := range ServicePools {
 		for _, service := range element.Services {
-			nodes = append(nodes, service.monitorNode())
+			node := status.MonitorNode{Type: service.Name, Location: service.URL.String(), LastSeen: service.SeenAt()}
+			nodes = append(nodes, node)
 		}
 	}
 
-	respondJSON(w, http.StatusOK, nodes)
-}
+	servicePoolMux.RUnlock()
 
-func (s *Service) monitorNode() status.MonitorNode {
-	return status.MonitorNode{Type: s.Name, Location: s.URL.String(), LastSeen: s.At}
+	respondJSON(w, http.StatusOK, nodes)
 }
