@@ -3,7 +3,6 @@ package heartbeat
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -15,12 +14,11 @@ type Heartbeat struct {
 	Available bool   `json:"available"`
 }
 
-func SendHeartbeat(url string, beat *Heartbeat) {
+func SendHeartbeat(url string, beat *Heartbeat) error {
 
 	heartbeatwave, err := json.Marshal(beat)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 
 	client := &http.Client{
@@ -29,9 +27,10 @@ func SendHeartbeat(url string, beat *Heartbeat) {
 
 	resp, err := client.Post(url, "application/json", bytes.NewBuffer(heartbeatwave))
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 
 	defer resp.Body.Close()
+
+	return nil
 }
