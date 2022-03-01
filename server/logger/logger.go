@@ -11,6 +11,7 @@ import (
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
@@ -73,4 +74,22 @@ func NewRollingFile(file string) (io.Writer, error) {
 		MaxSize:    1,  // megabytes
 		MaxAge:     10, // days
 	}, nil
+}
+
+func Initialize(logfile string) {
+
+	// zerolog.SetGlobalLevel(zerolog.DebugLevel)
+
+	logFile, err := NewRollingFile(logfile)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to allocate new rolling file")
+	}
+
+	var writers []io.Writer
+	writers = append(writers, zerolog.ConsoleWriter{Out: os.Stderr})
+	writers = append(writers, logFile)
+
+	mw := io.MultiWriter(writers...)
+	logger := zerolog.New(mw).With().Timestamp().Logger()
+	log.Logger = logger
 }
