@@ -1,7 +1,5 @@
 github.com/BurntSushi/toml v1.0.0 h1:dtDWrepsVPfW9H/4y7dDgFc2MBUSeJhlaDtK13CxFlU=
 github.com/BurntSushi/toml v1.0.0/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
-github.com/Festivals-App/festivals-identity-server v0.0.0-20210325185328-7a6071365783 h1:N/6+E7t99zYjfZ3PqEvrD2LDWNQ+QmKvWNedE6i5fuA=
-github.com/Festivals-App/festivals-identity-server v0.0.0-20210325185328-7a6071365783/go.mod h1:5HfqJrKCDd+WDbSm9PTqRlkkUxfua9j258d3f4jSg2Q=
 github.com/Festivals-App/festivals-identity-server v0.0.0-20220303023324-f741680114a8 h1:O5y2fPKALg1msCI9nRSrfkL70JVYBvSTzZ7CJBDxEBU=
 github.com/Festivals-App/festivals-identity-server v0.0.0-20220303023324-f741680114a8/go.mod h1:UsxekAlnCGX6skDRl2tMeI0lbKiSDQ08+p2WfdH+Yvc=
 github.com/coreos/go-systemd/v22 v22.3.2/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
