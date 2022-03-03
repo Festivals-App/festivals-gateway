@@ -58,7 +58,7 @@ func ParseConfig(cfgFile string) *Config {
 	}
 	adminKeyValues := content.Get("authentication.admin-keys").([]interface{})
 	adminKeys := make([]string, len(adminKeyValues))
-	for i, v := range keyValues {
+	for i, v := range adminKeyValues {
 		adminKeys[i] = v.(string)
 	}
 
