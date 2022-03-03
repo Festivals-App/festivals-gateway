@@ -11,7 +11,10 @@ type Config struct {
 	ServiceBindAddress string
 	ServiceBindHost    string
 	ServicePort        int
+	ServiceKey         string
+	LoversEar          string
 	APIKeys            []string
+	AdminKeys          []string
 }
 
 func DefaultConfig() *Config {
@@ -41,21 +44,32 @@ func ParseConfig(cfgFile string) *Config {
 		log.Fatal("server initialize: could not read config file at '" + cfgFile + "'. Error: " + err.Error())
 	}
 
-	serverBindAdress := content.Get("service.bind-address").(string)
-	serverBindHost := content.Get("service.bind-host").(string)
-	serverPort := content.Get("service.port").(int64)
+	serviceBindAdress := content.Get("service.bind-address").(string)
+	serviceBindHost := content.Get("service.bind-host").(string)
+	servicePort := content.Get("service.port").(int64)
+	serviceKey := content.Get("service.key").(string)
+
+	loversear := content.Get("heartbeat.endpoint").(string)
 
 	keyValues := content.Get("authentication.api-keys").([]interface{})
 	keys := make([]string, len(keyValues))
 	for i, v := range keyValues {
 		keys[i] = v.(string)
 	}
+	adminKeyValues := content.Get("authentication.admin-keys").([]interface{})
+	adminKeys := make([]string, len(adminKeyValues))
+	for i, v := range keyValues {
+		adminKeys[i] = v.(string)
+	}
 
 	return &Config{
-		ServiceBindAddress: serverBindAdress,
-		ServiceBindHost:    serverBindHost,
-		ServicePort:        int(serverPort),
+		ServiceBindAddress: serviceBindAdress,
+		ServiceBindHost:    serviceBindHost,
+		ServicePort:        int(servicePort),
+		ServiceKey:         serviceKey,
+		LoversEar:          loversear,
 		APIKeys:            keys,
+		AdminKeys:          adminKeys,
 	}
 }
 
