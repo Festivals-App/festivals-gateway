@@ -5,6 +5,11 @@
 bind-address = "localhost"
 bind-host = "localhost"
 port = 8080
+key = "TEST_API_KEY_001"
+
+[heartbeat]
+endpoint = "localhost"
 
 [authentication]
 api-keys = ["TEST_API_KEY_001", "TEST_API_KEY_002", "TEST_API_KEY_003"]
+admin-keys = ["TEST_API_KEY_001"]
