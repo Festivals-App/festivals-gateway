@@ -14,7 +14,7 @@ type Heartbeat struct {
 	Available bool   `json:"available"`
 }
 
-func SendHeartbeat(url string, beat *Heartbeat) error {
+func SendHeartbeat(url string, serviceKey string, beat *Heartbeat) error {
 
 	heartbeatwave, err := json.Marshal(beat)
 	if err != nil {
@@ -25,7 +25,15 @@ func SendHeartbeat(url string, beat *Heartbeat) error {
 		Timeout: time.Second * 2,
 	}
 
-	resp, err := client.Post(url, "application/json", bytes.NewBuffer(heartbeatwave))
+	request, err := http.NewRequest("POST", url, bytes.NewBuffer(heartbeatwave))
+	if err != nil {
+		return err
+	}
+
+	request.Header.Set("Api-Key", serviceKey)
+	request.Header.Set("Content-Type", "application/json; charset=utf-8")
+
+	resp, err := client.Do(request)
 	if err != nil {
 		return err
 	}
