@@ -70,13 +70,13 @@ func NewRollingFile(file string) (io.Writer, error) {
 
 	return &lumberjack.Logger{
 		Filename:   file,
-		MaxBackups: 3,  // files
-		MaxSize:    1,  // megabytes
-		MaxAge:     10, // days
+		MaxBackups: 10, // files
+		MaxSize:    50, // megabytes
+		MaxAge:     31, // days
 	}, nil
 }
 
-func Initialize(logfile string) {
+func Initialize(logfile string, console bool) {
 
 	// zerolog.SetGlobalLevel(zerolog.DebugLevel)
 
@@ -86,7 +86,9 @@ func Initialize(logfile string) {
 	}
 
 	var writers []io.Writer
-	writers = append(writers, zerolog.ConsoleWriter{Out: os.Stderr})
+	if console {
+		writers = append(writers, zerolog.ConsoleWriter{Out: os.Stderr})
+	}
 	writers = append(writers, logFile)
 
 	mw := io.MultiWriter(writers...)
