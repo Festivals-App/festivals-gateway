@@ -1,0 +1,13 @@
+[Unit]
+Description=FestivalsApp gateway, a live and lightweight go server gateway.
+ConditionPathExists=/usr/local/bin/festivals-gateway
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5s
+ExecStartPre=/bin/mkdir -p /var/log/festivals-gateway
+ExecStart=/usr/local/bin/festivals-gateway
+
+[Install]
+WantedBy=multi-user.target
