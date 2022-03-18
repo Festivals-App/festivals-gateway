@@ -48,7 +48,7 @@ sleep 1
 echo "Downloading newest festivals-gateway binary release..."
 curl -L "$file_url" -o festivals-gateway.tar.gz
 tar -xf festivals-gateway.tar.gz
-mv festivals-server /usr/local/bin/festivals-gateway || { echo "Failed to install festivals-gateway binary. Exiting." ; exit 1; }
+mv festivals-gateway /usr/local/bin/festivals-gateway || { echo "Failed to install festivals-gateway binary. Exiting." ; exit 1; }
 echo "Installed the festivals-gateway binary to '/usr/local/bin/festivals-gateway'."
 mv config_template.toml /etc/festivals-gateway.conf
 echo "Moved default festivals-gateway config to '/etc/festivals-gateway.conf'."
