@@ -33,6 +33,18 @@ TBA
 
 ## Deployment
 
+### VM deployment
+
+The install, update and uninstall scripts should work with any system that uses *systemd* and *firewalld*.
+Additionally the scripts will somewhat work under macOS but won't configure the firewall or launch service.
+
+Installing
+```bash
+curl -o install.sh https://raw.githubusercontent.com/Festivals-App/festivals-gateway/main/operation/install.sh
+chmod +x install.sh
+sudo ./install.sh
+```
+
 ### Server
 
 All of the scripts require Ubuntu 20 LTS as the operating system and that the server has already been initialised, see the steps to do that [here](https://github.com/Festivals-App/festivals-documentation/tree/master/deployment/general-vm-setup).
@@ -46,6 +58,19 @@ TBA
 ## Usage
 
 TBA
+
+base/health
+base/version
+base/info
+base/log
+
+discovery.base/services
+discovery.base/loversear
+
+api.base/*
+
+files.base/*
+
 
 ### Documentation
 
