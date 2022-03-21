@@ -44,6 +44,12 @@ curl -o install.sh https://raw.githubusercontent.com/Festivals-App/festivals-gat
 chmod +x install.sh
 sudo ./install.sh
 ```
+Updating
+```bash
+curl -o update.sh https://raw.githubusercontent.com/Festivals-App/festivals-gateway/main/operation/update.sh
+chmod +x update.sh
+sudo ./update.sh
+```
 
 ### Server
 
