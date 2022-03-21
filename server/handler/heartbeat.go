@@ -11,6 +11,8 @@ import (
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/heartbeat"
 	"github.com/Festivals-App/festivals-gateway/server/loadbalancer"
+
+	"github.com/rs/zerolog/log"
 )
 
 func ReceivedHeartbeat(conf *config.Config, w http.ResponseWriter, r *http.Request) {
@@ -18,13 +20,15 @@ func ReceivedHeartbeat(conf *config.Config, w http.ResponseWriter, r *http.Reque
 	var beat heartbeat.Heartbeat
 	err := json.NewDecoder(r.Body).Decode(&beat)
 	if err != nil {
-		respondError(w, http.StatusBadRequest, "Failed to read heartbeat!")
+		log.Error().Err(err).Msg("failed to decode send heartbeat payload")
+		respondError(w, http.StatusBadRequest, "i don't have any feelings for you")
 		return
 	}
 
 	url, err := url.Parse("http://" + beat.Host + ":" + strconv.Itoa(beat.Port))
 	if err != nil {
-		respondError(w, http.StatusBadRequest, "Failed to read heartbeat URL!")
+		log.Error().Err(err).Msg("failed to parse heartbeat sender url")
+		respondError(w, http.StatusBadRequest, "i don't have any feelings for you")
 		return
 	}
 
