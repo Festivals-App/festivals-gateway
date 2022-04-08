@@ -75,7 +75,10 @@ func GetGatewayRouter(s *Server) chi.Router {
 	r.Get("/health", s.handleRequestWithoutValidation(handler.GetHealth))
 	r.Get("/version", s.handleRequestWithoutValidation(handler.GetVersion))
 	r.Get("/info", s.handleRequestWithoutValidation(handler.GetInfo))
+
 	r.Get("/log", s.handleAdminRequest(handler.GetLog))
+	r.Post("/update", s.handleAdminRequest(handler.MakeUpdate))
+
 	return r
 }
 
