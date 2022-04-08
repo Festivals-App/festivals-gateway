@@ -33,4 +33,4 @@ jobs:
         asset_name: festivals-gateway-${{ matrix.goos }}-${{ matrix.goarch }}
         build_flags: -v
         ldflags: -X 'github.com/Festivals-App/festivals-gateway/server/status.ServerVersion=${{ env.APP_VERSION }}' -X 'github.com/Festivals-App/festivals-gateway/server/status.BuildTime=${{ env.BUILD_TIME }}' -X 'github.com/Festivals-App/festivals-gateway/server/status.GitRef=${{ github.ref }}'
-        extra_files: LICENSE README.md config_template.toml operation/service_template.service
+        extra_files: LICENSE README.md config_template.toml operation/service_template.service operation/update.sh
