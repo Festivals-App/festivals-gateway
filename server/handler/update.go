@@ -10,7 +10,7 @@ import (
 
 func MakeUpdate(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
-	newVersion, err := update.RunUpdate("https://github.com/Festivals-App/festivals-server/releases/latest", "/usr/local/festivals-server/run.sh")
+	newVersion, err := update.RunUpdate("https://github.com/Festivals-App/festivals-gateway/releases/latest", "/usr/local/festivals-gateway/update.sh")
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to update")
 		respondError(w, http.StatusInternalServerError, "Failed to update")
