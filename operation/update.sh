@@ -9,8 +9,8 @@
 
 # Move to working dir
 #
-mkdir /usr/local/festivals-gateway || { echo "Failed to create working directory. Exiting." ; exit 1; }
-cd /usr/local/festivals-gateway || { echo "Failed to access working directory. Exiting." ; exit 1; }
+mkdir /usr/local/festivals-gateway/install || { echo "Failed to create working directory. Exiting." ; exit 1; }
+cd /usr/local/festivals-gateway/install || { echo "Failed to access working directory. Exiting." ; exit 1; }
 
 # Stop the festivals-gateway
 #
@@ -58,12 +58,15 @@ sleep 1
 # Removing unused files
 #
 echo "Cleanup..."
-cd ~/ || { echo "Failed to access home directory. Exiting." ; exit 1; }
-rm -r /usr/local/festivals-gateway
+cd /usr/local/festivals-gateway || { echo "Failed to access server directory. Exiting." ; exit 1; }
+rm -r /usr/local/festivals-gateway/install
+sleep 1
+
+# Start the festivals-gateway
+#
+systemctl start festivals-gateway
+echo "Started festivals-gateway"
 sleep 1
 
 echo "Done!"
-sleep 1
-
-echo "Please start the server manually by running 'systemctl start festivals-gateway' after you updated the configuration file at '/etc/festivals-gateway.conf'"
 sleep 1
