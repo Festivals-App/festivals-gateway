@@ -24,8 +24,8 @@ func RunUpdate(repo string, updateScriptPath string) (string, error) {
 		return "", errors.New("this server is already up-to-date")
 	}
 
-	cmd := exec.Command("/bin/bash", "-c", "sudo "+updateScriptPath)
-	err = cmd.Run()
+	cmd := exec.Command("/bin/bash", "-c", "sudo "+updateScriptPath+" &")
+	err = cmd.Start()
 	if err != nil {
 		return "", errors.New("Failed to run update script with error: " + err.Error())
 	}
