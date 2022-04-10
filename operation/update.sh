@@ -12,12 +12,6 @@
 mkdir /usr/local/festivals-gateway/install || { echo "Failed to create working directory. Exiting." ; exit 1; }
 cd /usr/local/festivals-gateway/install || { echo "Failed to access working directory. Exiting." ; exit 1; }
 
-# Stop the festivals-gateway
-#
-systemctl stop festivals-gateway
-echo "Stopped festivals-gateway"
-sleep 1
-
 # Get system os
 #
 if [ "$(uname -s)" = "Darwin" ]; then
@@ -62,10 +56,10 @@ cd /usr/local/festivals-gateway || { echo "Failed to access server directory. Ex
 rm -r /usr/local/festivals-gateway/install
 sleep 1
 
-# Start the festivals-gateway
+# Restart the festivals-gateway
 #
-systemctl start festivals-gateway
-echo "Started festivals-gateway"
+systemctl restart festivals-gateway
+echo "Restarted the festivals-gateway"
 sleep 1
 
 echo "Done!"
