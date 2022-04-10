@@ -30,7 +30,7 @@ func RunUpdate(repo string, updateScriptPath string) (string, error) {
 		return "", errors.New("Failed to run update script with error: " + err.Error())
 	}
 
-	return newestVersion, nil
+	return currentVersion + " => " + newestVersion, nil
 }
 
 func LatestVersion(repository string) (string, error) {
