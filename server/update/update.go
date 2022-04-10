@@ -4,13 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
-
-	"github.com/Festivals-App/festivals-gateway/server/status"
 )
 
-func RunUpdate(repo string, updateScriptPath string) (string, error) {
+func RunUpdate(currentVersion string, repo string, updateScriptPath string) (string, error) {
 
-	currentVersion := status.VersionString()
 	if currentVersion == "development" {
 		return "", errors.New("this is a development server please update manually")
 	}
