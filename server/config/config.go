@@ -13,6 +13,7 @@ type Config struct {
 	ServicePort        int
 	ServiceKey         string
 	LoversEar          string
+	Website            string
 	APIKeys            []string
 	AdminKeys          []string
 }
@@ -48,6 +49,7 @@ func ParseConfig(cfgFile string) *Config {
 	serviceBindHost := content.Get("service.bind-host").(string)
 	servicePort := content.Get("service.port").(int64)
 	serviceKey := content.Get("service.key").(string)
+	website := content.Get("service.website").(string)
 
 	loversear := content.Get("heartbeat.endpoint").(string)
 
@@ -68,6 +70,7 @@ func ParseConfig(cfgFile string) *Config {
 		ServicePort:        int(servicePort),
 		ServiceKey:         serviceKey,
 		LoversEar:          loversear,
+		Website:            website,
 		APIKeys:            keys,
 		AdminKeys:          adminKeys,
 	}
