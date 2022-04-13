@@ -8,6 +8,10 @@ port = 8080
 key = "TEST_API_KEY_001"
 website = "http://localhost:8080"
 
+[tls]
+cert = "/certs/cert.pem"
+key = "/certs/key.pem"
+
 [heartbeat]
 endpoint = "localhost"
 

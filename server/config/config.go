@@ -12,8 +12,10 @@ type Config struct {
 	ServiceBindHost    string
 	ServicePort        int
 	ServiceKey         string
-	LoversEar          string
 	Website            string
+	TLSCert            string
+	TLSKey             string
+	LoversEar          string
 	APIKeys            []string
 	AdminKeys          []string
 }
@@ -51,6 +53,9 @@ func ParseConfig(cfgFile string) *Config {
 	serviceKey := content.Get("service.key").(string)
 	website := content.Get("service.website").(string)
 
+	tlscert := content.Get("tls.cert").(string)
+	tlskey := content.Get("tls.key").(string)
+
 	loversear := content.Get("heartbeat.endpoint").(string)
 
 	keyValues := content.Get("authentication.api-keys").([]interface{})
@@ -69,8 +74,10 @@ func ParseConfig(cfgFile string) *Config {
 		ServiceBindHost:    serviceBindHost,
 		ServicePort:        int(servicePort),
 		ServiceKey:         serviceKey,
-		LoversEar:          loversear,
+		TLSCert:            tlscert,
+		TLSKey:             tlskey,
 		Website:            website,
+		LoversEar:          loversear,
 		APIKeys:            keys,
 		AdminKeys:          adminKeys,
 	}

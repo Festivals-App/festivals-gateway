@@ -119,7 +119,7 @@ func (s *Server) Run(host string) {
 	//ssl_certificate /etc/letsencrypt/live/festivalsapp.org/fullchain.pem; # managed by Certbot
 	//  ssl_certificate_key /etc/letsencrypt/live/festivalsapp.org/privkey.pem; # managed by Certbot
 
-	if err := http.ListenAndServeTLS(host, "/etc/letsencrypt/live/festivalsapp.org/fullchain.pem", "/etc/letsencrypt/live/festivalsapp.org/privkey.pem", s.Router); err != nil {
+	if err := http.ListenAndServeTLS(host, s.Config.TLSCert, s.Config.TLSKey, s.Router); err != nil {
 		log.Fatal().Err(err).Msg("Startup failed")
 	}
 
