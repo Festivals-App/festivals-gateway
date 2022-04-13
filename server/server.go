@@ -115,9 +115,19 @@ func GetFestivalsFilesAPIRouter(s *Server) chi.Router {
 // Run the server on it's router
 func (s *Server) Run(host string) {
 	//log.Fatal(http.ListenAndServeTLS(host, "/cert", "/keys", s.Router))
-	if err := http.ListenAndServe(host, s.Router); err != nil {
+
+	//ssl_certificate /etc/letsencrypt/live/festivalsapp.org/fullchain.pem; # managed by Certbot
+	//  ssl_certificate_key /etc/letsencrypt/live/festivalsapp.org/privkey.pem; # managed by Certbot
+
+	if err := http.ListenAndServeTLS(host, "/etc/letsencrypt/live/festivalsapp.org/fullchain.pem", "/etc/letsencrypt/live/festivalsapp.org/privkey.pem", s.Router); err != nil {
 		log.Fatal().Err(err).Msg("Startup failed")
 	}
+
+	/*
+		if err := http.ListenAndServe(host, s.Router); err != nil {
+			log.Fatal().Err(err).Msg("Startup failed")
+		}
+	*/
 }
 
 // function prototype to inject config instance in handleRequest()
