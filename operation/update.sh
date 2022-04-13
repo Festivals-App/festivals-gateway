@@ -63,4 +63,4 @@ echo "Restarted the festivals-gateway"
 sleep 1
 
 echo "Done!"
-sleep 1
+sleep 1 
