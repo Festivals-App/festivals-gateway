@@ -15,6 +15,12 @@ require (
 )
 
 require (
+	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
+	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
+	golang.org/x/text v0.3.6 // indirect
+)
+
+require (
 	github.com/BurntSushi/toml v1.0.0 // indirect
 	github.com/Festivals-App/festivals-identity-server v0.0.0-20220303023324-f741680114a8
 	gopkg.in/yaml.v2 v2.4.0 // indirect

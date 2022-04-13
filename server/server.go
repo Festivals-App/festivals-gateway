@@ -1,8 +1,10 @@
 package server
 
 import (
+	"crypto/tls"
 	"net/http"
 	"strconv"
+
 	//"strconv"
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
@@ -13,13 +15,17 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/hostrouter"
 	"github.com/rs/zerolog/log"
+
 	//"github.com/prometheus/client_golang/prometheus/promhttp"
+	"golang.org/x/crypto/acme/autocert"
 )
 
 // Server has router and db instances
 type Server struct {
-	Router *chi.Mux
-	Config *config.Config
+	Router      *chi.Mux
+	Config      *config.Config
+	CertManager *autocert.Manager
+	TLSConfig   *tls.Config
 }
 
 // Initialize the server with predefined configuration
@@ -28,9 +34,29 @@ func (s *Server) Initialize(config *config.Config) {
 	s.Router = chi.NewRouter()
 	s.Config = config
 
+	s.setTLSHandling()
+
 	s.setMiddleware()
 	s.setWalker()
 	s.setRoutes()
+}
+
+func (s *Server) setTLSHandling() {
+
+	base := s.Config.ServiceBindHost
+	hosts := []string{base, "discovery." + base, "api." + base, "files." + base, "images." + base, "www." + base}
+
+	certManager := autocert.Manager{
+		Prompt:     autocert.AcceptTOS,
+		HostPolicy: autocert.HostWhitelist(hosts...),
+		Cache:      autocert.DirCache("/etc/letsencrypt/live/" + base),
+	}
+
+	tlsConfig := certManager.TLSConfig()
+	tlsConfig.GetCertificate = getDevelopmentOrLetsEncryptCert(s.Config, &certManager)
+
+	s.CertManager = &certManager
+	s.TLSConfig = tlsConfig
 }
 
 func (s *Server) setMiddleware() {
@@ -115,27 +141,28 @@ func GetFestivalsFilesAPIRouter(s *Server) chi.Router {
 // Run the server on it's router
 func (s *Server) Run(host string) {
 
-	if config.Debug() {
-		log.Info().Msg("Starting server without TLS. Remember to set the correct Port ;)")
-		if err := http.ListenAndServe(host, s.Router); err != nil {
-			log.Fatal().Err(err).Msg("Startup failed")
-		}
-	} else {
-		if err := http.ListenAndServeTLS(host, s.Config.TLSCert, s.Config.TLSKey, s.Router); err != nil {
-			log.Fatal().Err(err).Msg("Startup failed")
-		}
+	server := http.Server{
+		Addr:      host,
+		Handler:   s.Router,
+		TLSConfig: s.TLSConfig,
+	}
+
+	if err := server.ListenAndServeTLS("", ""); err != nil {
+		log.Fatal().Err(err).Msg("Startup failed")
 	}
 }
 
 // function prototype to inject config instance in handleRequest()
 type RequestHandlerFunction func(config *config.Config, w http.ResponseWriter, r *http.Request)
 
+/*
 func (s *Server) handleAPIRequest(requestHandler RequestHandlerFunction) http.HandlerFunc {
 
 	return authentication.IsEntitled(s.Config.APIKeys, func(w http.ResponseWriter, r *http.Request) {
 		requestHandler(s.Config, w, r)
 	})
 }
+*/
 
 func (s *Server) handleAdminRequest(requestHandler RequestHandlerFunction) http.HandlerFunc {
 
@@ -149,4 +176,20 @@ func (s *Server) handleRequestWithoutValidation(requestHandler RequestHandlerFun
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestHandler(s.Config, w, r)
 	})
+}
+
+func getDevelopmentOrLetsEncryptCert(conf *config.Config, certManager *autocert.Manager) func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
+	return func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
+
+		certificate, err := tls.LoadX509KeyPair(conf.TLSCert, conf.TLSKey)
+		if err != nil {
+			if config.Production() && conf.ServicePort == 443 {
+				log.Info().Msg("Using Letsencrypt autocert")
+				return certManager.GetCertificate(hello)
+			}
+			log.Panic().Err(err).Msg("Failed to load development certificates or serving on the wrong TLS port")
+		}
+		log.Info().Msg("Using development TLS certificates")
+		return &certificate, err
+	}
 }

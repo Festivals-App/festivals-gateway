@@ -99,6 +99,11 @@ func Debug() bool {
 	return isPresent
 }
 
+func Production() bool {
+	_, isPresent := os.LookupEnv("DEBUG")
+	return !isPresent
+}
+
 // fileExists checks if a file exists and is not a directory before we
 // try using it to prevent further errors.
 // see: https://golangcode.com/check-if-a-file-exists/

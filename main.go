@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net"
+	"net/http"
 	"strconv"
 	"time"
 
@@ -29,6 +31,10 @@ func main() {
 	serverInstance := &server.Server{}
 	serverInstance.Initialize(conf)
 
+	// Redirect traffic from port 80 to used port
+	go http.ListenAndServe(":80", serverInstance.CertManager.HTTPHandler(nil))
+	log.Info().Msg("Start redirecting http traffic from port 80 to port " + strconv.Itoa(serverInstance.Config.ServicePort) + " and https")
+
 	go serverInstance.Run(":" + strconv.Itoa(conf.ServicePort))
 	log.Info().Msg("Server did start.")
 
@@ -50,4 +56,22 @@ func sendHeartbeat(conf *config.Config) {
 			log.Error().Err(err).Msg("Failed to send heartbeat")
 		}
 	}
+}
+
+func redirectHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" && r.Method != "HEAD" {
+		http.Error(w, "Please use HTTPS for your request", http.StatusBadRequest)
+		return
+	}
+	target := "https://" + stripPort(r.Host) + r.URL.RequestURI()
+	log.Info().Msg("Redirecting request for '" + r.URL.String() + "' to HTTPS")
+	http.Redirect(w, r, target, http.StatusFound)
+}
+
+func stripPort(hostport string) string {
+	host, _, err := net.SplitHostPort(hostport)
+	if err != nil {
+		return hostport
+	}
+	return net.JoinHostPort(host, "443")
 }
