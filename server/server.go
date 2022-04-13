@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 	"strconv"
+	//"strconv"
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/handler"
@@ -59,6 +60,10 @@ func (s *Server) setRoutes() {
 	hr := hostrouter.New()
 
 	base := s.Config.ServiceBindHost + ":" + strconv.Itoa(s.Config.ServicePort)
+
+	if s.Config.ServicePort == 80 || s.Config.ServicePort == 443 {
+		base = s.Config.ServiceBindHost
+	}
 
 	hr.Map(base, GetGatewayRouter(s))
 	hr.Map("discovery."+base, GetDiscoveryRouter(s))

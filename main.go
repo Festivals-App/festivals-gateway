@@ -28,7 +28,7 @@ func main() {
 	serverInstance := &server.Server{}
 	serverInstance.Initialize(conf)
 
-	go serverInstance.Run(conf.ServiceBindAddress + ":" + strconv.Itoa(conf.ServicePort))
+	go serverInstance.Run(":" + strconv.Itoa(conf.ServicePort))
 	log.Info().Msg("Server did start.")
 
 	go sendHeartbeat(conf)
