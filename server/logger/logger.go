@@ -45,7 +45,7 @@ func Middleware(logger *zerolog.Logger) func(next http.Handler) http.Handler {
 					Str("type", "access").
 					Timestamp().
 					Fields(map[string]interface{}{
-						"url":        r.URL.Path,
+						"url":        r.Host + r.URL.Path,
 						"method":     r.Method,
 						"status":     ww.Status(),
 						"latency_ms": float64(t2.Sub(t1).Nanoseconds()) / 1000000.0,
