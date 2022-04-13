@@ -25,7 +25,7 @@ uninstall:
 	rm /etc/systemd/system/festivals-gateway.service
 
 run:
-	./festivals-gateway
+	./festivals-gateway --debug
 
 stop:
 	killall festivals-gateway

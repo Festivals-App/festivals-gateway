@@ -1,7 +1,7 @@
 package config
 
 import (
-	"log"
+	"github.com/rs/zerolog/log"
 	"os"
 
 	"github.com/pelletier/go-toml"
@@ -34,7 +34,7 @@ func DefaultConfig() *Config {
 	// this is mostly so the application will run in development environment
 	path, err := os.Getwd()
 	if err != nil {
-		log.Fatal("server initialize: could not read default config file.")
+		log.Fatal().Msg("server initialize: could not read default config file.")
 	}
 	path = path + "/config_template.toml"
 	return ParseConfig(path)
@@ -44,7 +44,7 @@ func ParseConfig(cfgFile string) *Config {
 
 	content, err := toml.LoadFile(cfgFile)
 	if err != nil {
-		log.Fatal("server initialize: could not read config file at '" + cfgFile + "'. Error: " + err.Error())
+		log.Fatal().Msg("server initialize: could not read config file at '" + cfgFile + "'. Error: " + err.Error())
 	}
 
 	serviceBindAdress := content.Get("service.bind-address").(string)
@@ -81,6 +81,22 @@ func ParseConfig(cfgFile string) *Config {
 		APIKeys:            keys,
 		AdminKeys:          adminKeys,
 	}
+}
+
+func CheckForArguments() {
+
+	if len(os.Args) == 2 {
+		if os.Args[1] == "--debug" {
+
+			os.Setenv("DEBUG", "true")
+			log.Info().Msg("Running in debug mode")
+		}
+	}
+}
+
+func Debug() bool {
+	_, isPresent := os.LookupEnv("DEBUG")
+	return isPresent
 }
 
 // fileExists checks if a file exists and is not a directory before we

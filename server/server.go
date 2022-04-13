@@ -114,20 +114,17 @@ func GetFestivalsFilesAPIRouter(s *Server) chi.Router {
 
 // Run the server on it's router
 func (s *Server) Run(host string) {
-	//log.Fatal(http.ListenAndServeTLS(host, "/cert", "/keys", s.Router))
 
-	//ssl_certificate /etc/letsencrypt/live/festivalsapp.org/fullchain.pem; # managed by Certbot
-	//  ssl_certificate_key /etc/letsencrypt/live/festivalsapp.org/privkey.pem; # managed by Certbot
-
-	if err := http.ListenAndServeTLS(host, s.Config.TLSCert, s.Config.TLSKey, s.Router); err != nil {
-		log.Fatal().Err(err).Msg("Startup failed")
-	}
-
-	/*
+	if config.Debug() {
+		log.Info().Msg("Starting server without TLS. Remember to set the correct Port ;)")
 		if err := http.ListenAndServe(host, s.Router); err != nil {
 			log.Fatal().Err(err).Msg("Startup failed")
 		}
-	*/
+	} else {
+		if err := http.ListenAndServeTLS(host, s.Config.TLSCert, s.Config.TLSKey, s.Router); err != nil {
+			log.Fatal().Err(err).Msg("Startup failed")
+		}
+	}
 }
 
 // function prototype to inject config instance in handleRequest()

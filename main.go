@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"strconv"
 	"time"
 
@@ -19,11 +18,13 @@ func main() {
 	log.Info().Msg("Server startup.")
 
 	conf := config.DefaultConfig()
-	if len(os.Args) > 1 {
-		conf = config.ParseConfig(os.Args[1])
-	}
+	//if len(os.Args) > 1 {
+	//	conf = config.ParseConfig(os.Args[1])
+	//}
 
 	log.Info().Msg("Server configuration was initialized.")
+
+	config.CheckForArguments()
 
 	serverInstance := &server.Server{}
 	serverInstance.Initialize(conf)
