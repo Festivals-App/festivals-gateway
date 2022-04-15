@@ -1,15 +1,19 @@
+# Project Rules
+festivals-gateway
 
 # Created by https://www.toptal.com/developers/gitignore/api/go,macos,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=go,macos,visualstudiocode
 
 ### Go ###
+# If you prefer the allow list template instead of the deny list, see community template:
+# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
+#
 # Binaries for programs and plugins
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
-festivals-gateway
 
 # Test binary, built with `go test -c`
 *.test
@@ -19,6 +23,9 @@ festivals-gateway
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Go workspace file
+go.work
 
 ### Go Patch ###
 /vendor/
@@ -53,15 +60,29 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+### macOS Patch ###
+# iCloud generated files
+*.icloud
+
 ### VisualStudioCode ###
 .vscode/*
+!.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
-*.code-workspace
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
 .ionide
+
+# Support for Project snippet scope
 
 # End of https://www.toptal.com/developers/gitignore/api/go,macos,visualstudiocode
