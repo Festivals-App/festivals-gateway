@@ -44,7 +44,7 @@ func (s *Server) Initialize(config *config.Config) {
 func (s *Server) setTLSHandling() {
 
 	base := s.Config.ServiceBindHost
-	hosts := []string{base, "discovery." + base, "api." + base, "files." + base, "images." + base, "www." + base}
+	hosts := []string{base, "discovery." + base, "api." + base, "files." + base, "images." + base, "www." + base, "website." + base}
 
 	certManager := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
