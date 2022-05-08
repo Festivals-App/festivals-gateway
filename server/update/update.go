@@ -1,18 +1,20 @@
 package update
 
 import (
+	"context"
 	"errors"
-	"fmt"
 	"os/exec"
+
+	"github.com/google/go-github/github"
 )
 
-func RunUpdate(currentVersion string, repo string, updateScriptPath string) (string, error) {
+func RunUpdate(currentVersion string, organisation string, repository string, updateScriptPath string) (string, error) {
 
 	if currentVersion == "development" {
 		return "", errors.New("this is a development server please update manually")
 	}
 
-	newestVersion, err := LatestVersion(repo)
+	newestVersion, err := LatestVersion(organisation, repository)
 	if err != nil {
 		return "", errors.New("failed to retrieve latest release version with error: " + err.Error())
 	}
@@ -30,13 +32,19 @@ func RunUpdate(currentVersion string, repo string, updateScriptPath string) (str
 	return currentVersion + " => " + newestVersion, nil
 }
 
-func LatestVersion(repository string) (string, error) {
+func LatestVersion(organisation string, repository string) (string, error) {
 
-	cmd := "curl --silent '" + repository + "' | sed -E 's/.*\"([^\"]+)\".*/\\1/' | xargs basename"
-	out, err := exec.Command("bash", "-c", cmd).Output()
+	client := github.NewClient(nil)
+
+	tags, _, err := client.Repositories.ListTags(context.Background(), organisation, repository, nil)
 	if err != nil {
-		errorMessage := fmt.Sprintf("Failed to execute command: %s with error: %s", cmd, err.Error())
-		return "<Unknown>", errors.New(errorMessage)
+		return "", errors.New("Failed to fetch tags for repository: " + err.Error())
 	}
-	return string(out), nil
+
+	if len(tags) > 0 {
+		latestTag := tags[0]
+		return *latestTag.Name, nil
+	}
+
+	return "", errors.New("Failed to fetch tags for repository '" + repository + "' in organisation '" + organisation + "' with error: " + err.Error())
 }
