@@ -16,7 +16,6 @@ import (
 	"github.com/go-chi/hostrouter"
 	"github.com/rs/zerolog/log"
 
-	//"github.com/prometheus/client_golang/prometheus/promhttp"
 	"golang.org/x/crypto/acme/autocert"
 )
 
@@ -44,7 +43,7 @@ func (s *Server) Initialize(config *config.Config) {
 func (s *Server) setTLSHandling() {
 
 	base := s.Config.ServiceBindHost
-	hosts := []string{base, "discovery." + base, "api." + base, "files." + base, "images." + base, "www." + base, "website." + base}
+	hosts := []string{base, "www." + base, "website." + base, "gateway." + base, "discovery." + base, "api." + base, "files." + base, "images." + base}
 
 	certManager := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
@@ -91,13 +90,41 @@ func (s *Server) setRoutes() {
 		base = s.Config.ServiceBindHost
 	}
 
-	hr.Map(base, GetGatewayRouter(s))
+	hr.Map(base, GetWebsiteRouter(s))
+	hr.Map("www."+base, GetWebsiteRouter(s))
+	hr.Map("website."+base, GetWebsiteNodeRouter(s))
+	hr.Map("gateway."+base, GetDiscoveryRouter(s))
 	hr.Map("discovery."+base, GetDiscoveryRouter(s))
 	hr.Map("api."+base, GetFestivalsAPIRouter(s))
 	hr.Map("files."+base, GetFestivalsFilesAPIRouter(s))
 
 	// Mount the host router
 	s.Router.Mount("/", hr)
+}
+
+func GetWebsiteRouter(s *Server) chi.Router {
+
+	r := chi.NewRouter()
+	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsWebsite))
+	return r
+}
+
+func GetWebsiteNodeRouter(s *Server) chi.Router {
+
+	r := chi.NewRouter()
+	r.Get("/health", s.handleRequestWithoutValidation(handler.GetHealth))
+	r.Get("/version", s.handleRequestWithoutValidation(handler.GetVersion))
+	r.Get("/info", s.handleRequestWithoutValidation(handler.GetInfo))
+
+	r.Get("/node/log", s.handleAdminRequest(handler.GetLog))
+	r.Get("/log", s.handleAdminRequest(handler.GetLog))
+
+	r.Post("/node/update", s.handleAdminRequest(handler.MakeUpdate))
+	r.Post("/update", s.handleAdminRequest(handler.MakeUpdate))
+
+	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsWebsite))
+
+	return r
 }
 
 func GetGatewayRouter(s *Server) chi.Router {
@@ -110,8 +137,6 @@ func GetGatewayRouter(s *Server) chi.Router {
 	r.Get("/log", s.handleAdminRequest(handler.GetLog))
 	r.Post("/update", s.handleAdminRequest(handler.MakeUpdate))
 
-	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsWebsite))
-
 	return r
 }
 
@@ -120,7 +145,7 @@ func GetDiscoveryRouter(s *Server) chi.Router {
 	r := chi.NewRouter()
 	r.Post("/loversear", s.handleAdminRequest(handler.ReceivedHeartbeat))
 	r.Get("/services", s.handleAdminRequest(handler.GetServices))
-	//r.Handle("/monitor", promhttp.Handler())
+
 	return r
 }
 
@@ -148,7 +173,7 @@ func (s *Server) Run(host string) {
 	}
 
 	if err := server.ListenAndServeTLS("", ""); err != nil {
-		log.Fatal().Err(err).Msg("Startup failed")
+		log.Fatal().Err(err).Msg("Failed torun server")
 	}
 }
 

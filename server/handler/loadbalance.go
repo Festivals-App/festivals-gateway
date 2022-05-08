@@ -18,7 +18,19 @@ var Pools sync.Map
 
 func GoToFestivalsWebsite(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
-	url, err := url.Parse(conf.Website)
+	url, err := loadbalancedHost("festivals-website")
+	if err != nil {
+		respondError(w, http.StatusServiceUnavailable, err.Error())
+		return
+	}
+
+	rp := httputil.NewSingleHostReverseProxy(url)
+	rp.ServeHTTP(w, r)
+}
+
+func GoToFestivalsWebsiteNode(conf *config.Config, w http.ResponseWriter, r *http.Request) {
+
+	url, err := loadbalancedHost("festivals-website-node")
 	if err != nil {
 		respondError(w, http.StatusServiceUnavailable, err.Error())
 		return
