@@ -93,7 +93,7 @@ func (s *Server) setRoutes() {
 	hr.Map(base, GetWebsiteRouter(s))
 	hr.Map("www."+base, GetWebsiteRouter(s))
 	hr.Map("website."+base, GetWebsiteNodeRouter(s))
-	hr.Map("gateway."+base, GetDiscoveryRouter(s))
+	hr.Map("gateway."+base, GetGatewayRouter(s))
 	hr.Map("discovery."+base, GetDiscoveryRouter(s))
 	hr.Map("api."+base, GetFestivalsAPIRouter(s))
 	hr.Map("files."+base, GetFestivalsFilesAPIRouter(s))
