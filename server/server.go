@@ -112,18 +112,7 @@ func GetWebsiteRouter(s *Server) chi.Router {
 func GetWebsiteNodeRouter(s *Server) chi.Router {
 
 	r := chi.NewRouter()
-	r.Get("/health", s.handleRequestWithoutValidation(handler.GetHealth))
-	r.Get("/version", s.handleRequestWithoutValidation(handler.GetVersion))
-	r.Get("/info", s.handleRequestWithoutValidation(handler.GetInfo))
-
-	r.Get("/node/log", s.handleAdminRequest(handler.GetLog))
-	r.Get("/log", s.handleAdminRequest(handler.GetLog))
-
-	r.Post("/node/update", s.handleAdminRequest(handler.MakeUpdate))
-	r.Post("/update", s.handleAdminRequest(handler.MakeUpdate))
-
-	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsWebsite))
-
+	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsWebsiteNode))
 	return r
 }
 
