@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net"
 	"net/http"
 	"strconv"
 	"time"
@@ -56,22 +55,4 @@ func sendHeartbeat(conf *config.Config) {
 			log.Error().Err(err).Msg("Failed to send heartbeat")
 		}
 	}
-}
-
-func redirectHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" && r.Method != "HEAD" {
-		http.Error(w, "Please use HTTPS for your request", http.StatusBadRequest)
-		return
-	}
-	target := "https://" + stripPort(r.Host) + r.URL.RequestURI()
-	log.Info().Msg("Redirecting request for '" + r.URL.String() + "' to HTTPS")
-	http.Redirect(w, r, target, http.StatusFound)
-}
-
-func stripPort(hostport string) string {
-	host, _, err := net.SplitHostPort(hostport)
-	if err != nil {
-		return hostport
-	}
-	return net.JoinHostPort(host, "443")
 }
