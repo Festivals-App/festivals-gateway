@@ -14,7 +14,7 @@ func VersionString() string {
 }
 
 func InfoString() interface{} {
-	resultMap := map[string]interface{}{"Version": ServerVersion, "BuildTime": BuildTime, "GitRef": GitRef, "Identifier": SeviceIdentifier}
+	resultMap := map[string]interface{}{"Version": ServerVersion, "BuildTime": BuildTime, "GitRef": GitRef, "Service": SeviceIdentifier}
 	return resultMap
 }
 
