@@ -19,9 +19,6 @@ func main() {
 	log.Info().Msg("Server startup.")
 
 	conf := config.DefaultConfig()
-	//if len(os.Args) > 1 {
-	//	conf = config.ParseConfig(os.Args[1])
-	//}
 
 	log.Info().Msg("Server configuration was initialized.")
 
