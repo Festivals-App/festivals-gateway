@@ -162,7 +162,7 @@ func (s *Server) Run(host string) {
 	}
 
 	if err := server.ListenAndServeTLS("", ""); err != nil {
-		log.Fatal().Err(err).Msg("Failed torun server")
+		log.Fatal().Err(err).Str("type", "server").Msg("Failed to run server")
 	}
 }
 
@@ -198,10 +198,10 @@ func getDevelopmentOrLetsEncryptCert(conf *config.Config, certManager *autocert.
 		certificate, err := tls.LoadX509KeyPair(conf.TLSCert, conf.TLSKey)
 		if err != nil {
 			if config.Production() && conf.ServicePort == 443 {
-				log.Info().Msg("Using Letsencrypt autocert")
+				log.Info().Str("type", "server").Msg("Using Letsencrypt autocert")
 				return certManager.GetCertificate(hello)
 			}
-			log.Panic().Err(err).Msg("Failed to load development certificates or serving on the wrong TLS port")
+			log.Panic().Err(err).Str("type", "server").Msg("Failed to load development certificates or serving on the wrong TLS port")
 		}
 		log.Info().Msg("Using development TLS certificates")
 		return &certificate, err
