@@ -19,46 +19,72 @@ func Middleware(logger *zerolog.Logger) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
 
-			log := logger.With().Logger()
-
+			requestStart := time.Now()
+			requestID := r.Header.Get("X-Request-ID")
+			log := logger.With().Timestamp().Str("type", "access").Str("request_id", requestID).Logger()
 			ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
 
-			t1 := time.Now()
 			defer func() {
-				t2 := time.Now()
-				requestID := r.Header.Get("X-Request-ID")
+
+				requestEnd := time.Now()
 
 				// Recover and record stack traces in case of a panic
 				if rec := recover(); rec != nil {
 					log.Error().
-						Str("type", "error").
-						Timestamp().
 						Interface("recover_info", rec).
 						Bytes("debug_stack", debug.Stack()).
-						Str("request_id", requestID).
-						Msg("log system error")
+						Msg("Recovered from panicking routine")
 					http.Error(ww, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				}
 
-				// log end request
-				log.Info().
-					Str("type", "access").
-					Timestamp().
-					Fields(map[string]interface{}{
-						"url":        r.Host + r.URL.Path,
-						"method":     r.Method,
-						"status":     ww.Status(),
-						"latency_ms": float64(t2.Sub(t1).Nanoseconds()) / 1000000.0,
-						"bytes_out":  ww.BytesWritten(),
-						"request_id": requestID,
-					}).
-					Msg("incoming_request")
+				// log successfull requests at trace lvl
+				if ww.Status() < 300 {
+					log.Trace().
+						Fields(map[string]interface{}{
+							"url":        r.Host + r.URL.Path,
+							"method":     r.Method,
+							"status":     ww.Status(),
+							"latency_ms": float64(requestEnd.Sub(requestStart).Nanoseconds()) / 1000000.0,
+							"bytes_out":  ww.BytesWritten(),
+						}).
+						Msg("Incoming request")
+
+				} else {
+					// log failed requests at debug lvl
+					log.Debug().
+						Fields(map[string]interface{}{
+							"url":        r.Host + r.URL.Path,
+							"method":     r.Method,
+							"status":     ww.Status(),
+							"latency_ms": float64(requestEnd.Sub(requestStart).Nanoseconds()) / 1000000.0,
+							"bytes_out":  ww.BytesWritten(),
+						}).
+						Msg("Incoming request")
+				}
 			}()
 
 			next.ServeHTTP(ww, r)
 		}
 		return http.HandlerFunc(fn)
 	}
+}
+
+func Initialize(logfile string, console bool) {
+
+	logFile, err := NewRollingFile(logfile)
+	if err != nil {
+		log.Fatal().Err(err).Msgf("Failed to allocate new rolling log file")
+	}
+
+	var writers []io.Writer
+	if console {
+		writers = append(writers, zerolog.ConsoleWriter{Out: os.Stderr})
+	}
+	writers = append(writers, logFile)
+
+	multiWriter := io.MultiWriter(writers...)
+	logger := zerolog.New(multiWriter).With().Timestamp().Logger()
+	log.Logger = logger
 }
 
 func NewRollingFile(file string) (io.Writer, error) {
@@ -74,24 +100,4 @@ func NewRollingFile(file string) (io.Writer, error) {
 		MaxSize:    50, // megabytes
 		MaxAge:     31, // days
 	}, nil
-}
-
-func Initialize(logfile string, console bool) {
-
-	// zerolog.SetGlobalLevel(zerolog.DebugLevel)
-
-	logFile, err := NewRollingFile(logfile)
-	if err != nil {
-		log.Fatal().Err(err).Msg("Failed to allocate new rolling file")
-	}
-
-	var writers []io.Writer
-	if console {
-		writers = append(writers, zerolog.ConsoleWriter{Out: os.Stderr})
-	}
-	writers = append(writers, logFile)
-
-	mw := io.MultiWriter(writers...)
-	logger := zerolog.New(mw).With().Timestamp().Logger()
-	log.Logger = logger
 }
