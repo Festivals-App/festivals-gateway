@@ -62,7 +62,7 @@ func (s *Server) setMiddleware() {
 	// tell the ruter which middleware to use
 	s.Router.Use(
 		// used to log the request
-		logger.Middleware(&log.Logger),
+		logger.Middleware(logger.TraceLogger("/var/log/festivals-gateway/trace.log")),
 		// tries to recover after panics
 		middleware.Recoverer,
 	)
@@ -124,6 +124,7 @@ func GetGatewayRouter(s *Server) chi.Router {
 	r.Get("/info", s.handleRequestWithoutValidation(handler.GetInfo))
 
 	r.Get("/log", s.handleAdminRequest(handler.GetLog))
+	r.Get("/log/trace", s.handleAdminRequest(handler.GetTraceLog))
 	r.Post("/update", s.handleAdminRequest(handler.MakeUpdate))
 
 	return r

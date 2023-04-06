@@ -20,6 +20,17 @@ func GetLog(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 	respondString(w, http.StatusOK, l)
 }
 
+func GetTraceLog(conf *config.Config, w http.ResponseWriter, r *http.Request) {
+
+	l, err := Log("/var/log/festivals-gateway/trace.log")
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to get log")
+		respondError(w, http.StatusBadRequest, "Failed to get log")
+		return
+	}
+	respondString(w, http.StatusOK, l)
+}
+
 func Log(location string) (string, error) {
 
 	l, err := ioutil.ReadFile(location)

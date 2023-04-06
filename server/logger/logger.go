@@ -69,11 +69,11 @@ func Middleware(logger *zerolog.Logger) func(next http.Handler) http.Handler {
 	}
 }
 
-func Initialize(logfile string, console bool) {
+func InitializeGlobalLogger(logfile string, console bool) {
 
 	logFile, err := NewRollingFile(logfile)
 	if err != nil {
-		log.Fatal().Err(err).Msgf("Failed to allocate new rolling log file")
+		log.Fatal().Err(err).Msgf("Failed to allocate new rolling log file for global logger")
 	}
 
 	var writers []io.Writer
@@ -85,6 +85,21 @@ func Initialize(logfile string, console bool) {
 	multiWriter := io.MultiWriter(writers...)
 	logger := zerolog.New(multiWriter).With().Timestamp().Logger()
 	log.Logger = logger
+}
+
+func TraceLogger(logfile string) *zerolog.Logger {
+
+	logFile, err := NewRollingFile(logfile)
+	if err != nil {
+		log.Fatal().Err(err).Msgf("Failed to allocate new rolling log file for trace logger")
+	}
+
+	var writers []io.Writer
+	writers = append(writers, logFile)
+
+	multiWriter := io.MultiWriter(writers...)
+	var traceLogger = zerolog.New(multiWriter).With().Timestamp().Logger()
+	return &traceLogger
 }
 
 func NewRollingFile(file string) (io.Writer, error) {
