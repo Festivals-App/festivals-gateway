@@ -27,6 +27,7 @@ func Middleware(logger *zerolog.Logger) func(next http.Handler) http.Handler {
 			defer func() {
 
 				requestEnd := time.Now()
+				status := ww.Status()
 
 				// Recover and record stack traces in case of a panic
 				if rec := recover(); rec != nil {
@@ -37,25 +38,24 @@ func Middleware(logger *zerolog.Logger) func(next http.Handler) http.Handler {
 					http.Error(ww, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				}
 
-				// log successfull requests at trace lvl
-				if ww.Status() < 300 {
+				if status < 300 {
+					// log successfull requests at trace lvl
 					log.Trace().
 						Fields(map[string]interface{}{
 							"url":        r.Host + r.URL.Path,
 							"method":     r.Method,
-							"status":     ww.Status(),
+							"status":     status,
 							"latency_ms": float64(requestEnd.Sub(requestStart).Nanoseconds()) / 1000000.0,
 							"bytes_out":  ww.BytesWritten(),
 						}).
 						Msg("Incoming request")
-
 				} else {
 					// log failed requests at debug lvl
 					log.Debug().
 						Fields(map[string]interface{}{
 							"url":        r.Host + r.URL.Path,
 							"method":     r.Method,
-							"status":     ww.Status(),
+							"status":     status,
 							"latency_ms": float64(requestEnd.Sub(requestStart).Nanoseconds()) / 1000000.0,
 							"bytes_out":  ww.BytesWritten(),
 						}).
