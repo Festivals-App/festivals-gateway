@@ -24,8 +24,8 @@ func GetTraceLog(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
 	l, err := Log("/var/log/festivals-gateway/trace.log")
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to get log")
-		respondError(w, http.StatusBadRequest, "Failed to get log")
+		log.Error().Err(err).Msg("Failed to get trace log")
+		respondError(w, http.StatusBadRequest, "Failed to get trace log")
 		return
 	}
 	respondString(w, http.StatusOK, l)
