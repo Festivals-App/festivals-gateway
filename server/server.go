@@ -36,7 +36,6 @@ func (s *Server) Initialize(config *config.Config) {
 	s.setTLSHandling()
 
 	s.setMiddleware()
-	s.setWalker()
 	s.setRoutes()
 }
 
@@ -66,17 +65,6 @@ func (s *Server) setMiddleware() {
 		// tries to recover after panics
 		middleware.Recoverer,
 	)
-}
-
-func (s *Server) setWalker() {
-
-	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
-		log.Info().Msg(method + " " + route + " \n")
-		return nil
-	}
-	if err := chi.Walk(s.Router, walkFunc); err != nil {
-		log.Panic().Err(err).Msg("Chi walker walked into error")
-	}
 }
 
 // setRouters sets the all required routers
