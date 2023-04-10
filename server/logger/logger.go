@@ -15,13 +15,13 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-func Middleware(logger *zerolog.Logger) func(next http.Handler) http.Handler {
+func Middleware(traceLogger *zerolog.Logger) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
 
 			requestStart := time.Now()
 			requestID := r.Header.Get("X-Request-ID")
-			log := logger.With().Timestamp().Str("type", "access").Str("request_id", requestID).Logger()
+			tlog := traceLogger.With().Str("request_id", requestID).Logger()
 			ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
 
 			defer func() {
@@ -29,18 +29,19 @@ func Middleware(logger *zerolog.Logger) func(next http.Handler) http.Handler {
 				requestEnd := time.Now()
 				status := ww.Status()
 
-				// Recover and record stack traces in case of a panic
+				// Recover and record stack traces in case of a panic to global logger
 				if rec := recover(); rec != nil {
 					log.Error().
 						Interface("recover_info", rec).
+						Str("request_id", requestID).
 						Bytes("debug_stack", debug.Stack()).
 						Msg("Recovered from panicking routine")
 					http.Error(ww, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				}
 
 				if status < 300 {
-					// log successfull requests at trace lvl
-					log.Trace().
+					// log successfull requests at trace lvl to trace logger
+					tlog.Trace().
 						Fields(map[string]interface{}{
 							"url":        r.Host + r.URL.Path,
 							"method":     r.Method,
@@ -50,9 +51,10 @@ func Middleware(logger *zerolog.Logger) func(next http.Handler) http.Handler {
 						}).
 						Msg("Incoming request")
 				} else {
-					// log failed requests at debug lvl
+					// log failed requests at debug lvl to global logger
 					log.Debug().
 						Fields(map[string]interface{}{
+							"request_id": requestID,
 							"url":        r.Host + r.URL.Path,
 							"method":     r.Method,
 							"status":     status,
@@ -98,7 +100,8 @@ func TraceLogger(logfile string) *zerolog.Logger {
 	writers = append(writers, logFile)
 
 	multiWriter := io.MultiWriter(writers...)
-	var traceLogger = zerolog.New(multiWriter).With().Timestamp().Logger()
+	var traceLogger = zerolog.New(multiWriter).With().Timestamp().Str("type", "access").Logger()
+
 	return &traceLogger
 }
 
