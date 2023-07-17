@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	//"strconv"
-
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/handler"
 	"github.com/Festivals-App/festivals-gateway/server/logger"
@@ -34,7 +32,6 @@ func (s *Server) Initialize(config *config.Config) {
 	s.Config = config
 
 	s.setTLSHandling()
-
 	s.setMiddleware()
 	s.setRoutes()
 }
@@ -187,12 +184,12 @@ func getDevelopmentOrLetsEncryptCert(conf *config.Config, certManager *autocert.
 		certificate, err := tls.LoadX509KeyPair(conf.TLSCert, conf.TLSKey)
 		if err != nil {
 			if config.Production() && conf.ServicePort == 443 {
-				log.Info().Str("type", "server").Msg("Using Letsencrypt autocert")
+				log.Debug().Str("type", "server").Msg("Using Letsencrypt autocert")
 				return certManager.GetCertificate(hello)
 			}
 			log.Panic().Err(err).Str("type", "server").Msg("Failed to load development certificates or serving on the wrong TLS port")
 		}
-		log.Info().Msg("Using development TLS certificates")
+		log.Debug().Msg("Using development TLS certificates")
 		return &certificate, err
 	}
 }
