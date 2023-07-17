@@ -34,7 +34,6 @@ func respondError(w http.ResponseWriter, code int, message string) {
 	_, _ = w.Write([]byte(response))
 }
 
-//
 func respondString(w http.ResponseWriter, code int, message string) {
 
 	response := []byte(message)
@@ -46,7 +45,6 @@ func respondString(w http.ResponseWriter, code int, message string) {
 	}
 }
 
-//
 func respondCode(w http.ResponseWriter, code int) {
 
 	w.Header().Set("Content-Type", "text/plain")
