@@ -138,6 +138,13 @@ func GetFestivalsFilesAPIRouter(s *Server) chi.Router {
 	return r
 }
 
+func GetFestivalsIdentityAPIRouter(s *Server) chi.Router {
+
+	r := chi.NewRouter()
+	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsIdentityAPI))
+	return r
+}
+
 // Run the server on it's router
 func (s *Server) Run(host string) {
 

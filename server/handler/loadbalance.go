@@ -64,6 +64,18 @@ func GoToFestivalsFilesAPI(conf *config.Config, w http.ResponseWriter, r *http.R
 	rp.ServeHTTP(w, r)
 }
 
+func GoToFestivalsIdentityAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
+
+	url, err := loadbalancedHost("festivals-identity-server")
+	if err != nil {
+		respondError(w, http.StatusServiceUnavailable, err.Error())
+		return
+	}
+
+	rp := httputil.NewSingleHostReverseProxy(url)
+	rp.ServeHTTP(w, r)
+}
+
 func loadbalancedHost(serviceIdentifier string) (*url.URL, error) {
 
 	servicePoolMux.RLock()
