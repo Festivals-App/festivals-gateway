@@ -50,12 +50,8 @@ func (sp *ServicePool) UpdateService(service *Service) {
 	known, index := sp.knownInstance(service)
 
 	if known {
-
 		sp.Services[index].WasSeen(time.Now())
-		//fmt.Printf("Updated instance: %+v\n", service)
-
 	} else {
-		//fmt.Printf("Initially added: %+v\n", service)
 		sp.Services = append(sp.Services, service)
 	}
 }
