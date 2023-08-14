@@ -154,7 +154,8 @@ func (s *Server) Run(host string) {
 		TLSConfig: s.TLSConfig,
 	}
 
-	if err := server.ListenAndServeTLS("", ""); err != nil {
+	specifiedInTLSConfig := ""
+	if err := server.ListenAndServeTLS(specifiedInTLSConfig, specifiedInTLSConfig); err != nil {
 		log.Fatal().Err(err).Str("type", "server").Msg("Failed to run server")
 	}
 }
