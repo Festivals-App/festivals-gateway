@@ -14,6 +14,7 @@ type Config struct {
 	ServicePort        int
 	ServiceKey         string
 	Website            string
+	TLSRootCert        string
 	TLSCert            string
 	TLSKey             string
 	LoversEar          string
@@ -54,6 +55,7 @@ func ParseConfig(cfgFile string) *Config {
 	serviceKey := content.Get("service.key").(string)
 	website := content.Get("service.website").(string)
 
+	tlsrootcert := content.Get("tls.festivaslapp-root-ca").(string)
 	tlscert := content.Get("tls.cert").(string)
 	tlskey := content.Get("tls.key").(string)
 
@@ -75,6 +77,7 @@ func ParseConfig(cfgFile string) *Config {
 		ServiceBindHost:    serviceBindHost,
 		ServicePort:        int(servicePort),
 		ServiceKey:         serviceKey,
+		TLSRootCert:        tlsrootcert,
 		TLSCert:            tlscert,
 		TLSKey:             tlskey,
 		Website:            website,

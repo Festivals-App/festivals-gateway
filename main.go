@@ -9,6 +9,7 @@ import (
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/heartbeat"
 	"github.com/Festivals-App/festivals-gateway/server/logger"
+	"github.com/Festivals-App/festivals-identity-server/festivalspki"
 	"github.com/rs/zerolog/log"
 )
 
@@ -23,6 +24,11 @@ func main() {
 	log.Info().Msg("Server configuration was initialized.")
 
 	config.CheckForArguments()
+
+	err := festivalspki.DownloadRootCERTIfNeeded(conf.TLSRootCert, "/usr/local/festivals-gateway/ca.crt")
+	if err != nil {
+		log.Fatal().Err(err).Msgf("Failed to retrieve the FestivalsApp Root CA public certificate.")
+	}
 
 	serverInstance := &server.Server{}
 	serverInstance.Initialize(conf)

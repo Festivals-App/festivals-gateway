@@ -9,6 +9,7 @@ key = "TEST_API_KEY_001"
 website = "http://localhost:8080"
 
 [tls]
+festivaslapp-root-ca = "https://my-root-cert.org/ca.crt"
 cert = "/certs/cert.pem"
 key = "/certs/key.pem"
 
