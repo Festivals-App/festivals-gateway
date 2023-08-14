@@ -1,8 +1,9 @@
 package config
 
 import (
-	"github.com/rs/zerolog/log"
 	"os"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/pelletier/go-toml"
 )
@@ -94,12 +95,12 @@ func CheckForArguments() {
 	}
 }
 
-func Debug() bool {
+func IsRunningInDebug() bool {
 	_, isPresent := os.LookupEnv("DEBUG")
 	return isPresent
 }
 
-func Production() bool {
+func IsRunningInProduction() bool {
 	_, isPresent := os.LookupEnv("DEBUG")
 	return !isPresent
 }
