@@ -200,7 +200,7 @@ func getDevelopmentOrLetsEncryptServerCert(conf *config.Config, certManager *aut
 
 func getRootCA(conf *config.Config) ([]byte, error) {
 
-	rootCACer, err := os.ReadFile(conf.TLSRootCert)
+	rootCACer, err := os.ReadFile("/usr/local/festivals-gateway/ca.crt")
 	if err != nil {
 		return nil, err
 	}
