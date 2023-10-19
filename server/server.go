@@ -50,13 +50,6 @@ func (s *Server) setTLSHandling() {
 
 	tlsConfig := certManager.TLSConfig()
 	tlsConfig.GetCertificate = getDevelopmentOrLetsEncryptServerCert(s.Config, &certManager)
-
-	rootCACert, err := getRootCA(s.Config)
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to read development root CA certificate")
-	}
-	tlsConfig.RootCAs.AppendCertsFromPEM(rootCACert)
-
 	s.CertManager = &certManager
 	s.TLSConfig = tlsConfig
 }
@@ -195,7 +188,12 @@ func getDevelopmentOrLetsEncryptServerCert(conf *config.Config, certManager *aut
 			}
 			log.Panic().Err(err).Str("type", "server").Msg("Failed to load development certificates or serving on the wrong TLS port")
 		}
-		log.Debug().Msg("Using development TLS certificates")
+		rootCACert, err := getRootCA(conf)
+		if err != nil {
+			log.Panic().Err(err).Str("type", "server").Msg("Failed to read development root CA certificate")
+		}
+		certificate.Certificate = append(certificate.Certificate, rootCACert)
+		log.Debug().Msg("Using development server TLS certificates")
 		return &certificate, err
 	}
 }
