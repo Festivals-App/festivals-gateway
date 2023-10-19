@@ -2,6 +2,8 @@ package server
 
 import (
 	"crypto/tls"
+	"crypto/x509"
+	"encoding/pem"
 	"net/http"
 	"os"
 	"strconv"
@@ -188,11 +190,16 @@ func getDevelopmentOrLetsEncryptServerCert(conf *config.Config, certManager *aut
 			}
 			log.Panic().Err(err).Str("type", "server").Msg("Failed to load development certificates or serving on the wrong TLS port")
 		}
-		rootCACert, err := getRootCA(conf)
+		rootCACertContent, err := os.ReadFile("/usr/local/festivals-gateway/ca.crt")
 		if err != nil {
 			log.Panic().Err(err).Str("type", "server").Msg("Failed to read development root CA certificate")
 		}
-		certificate.Certificate = append(certificate.Certificate, rootCACert)
+		block, _ := pem.Decode(rootCACertContent)
+		rootCACert, err := x509.ParseCertificate(block.Bytes)
+		if err != nil {
+			log.Panic().Err(err).Str("type", "server").Msg("Failed to parse development root CA certificate content")
+		}
+		certificate.Certificate = append(certificate.Certificate, rootCACert.Raw)
 		log.Debug().Msg("Using development server TLS certificates")
 		return &certificate, err
 	}

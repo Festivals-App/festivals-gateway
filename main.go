@@ -29,6 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatal().Err(err).Msgf("Failed to retrieve the FestivalsApp Root CA public certificate.")
 	}
+	log.Info().Msg("Loaded Root CA certificate")
 
 	serverInstance := &server.Server{}
 	serverInstance.Initialize(conf)
