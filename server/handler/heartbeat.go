@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -44,17 +43,14 @@ func registerService(service *loadbalancer.Service) {
 	servicePool, exists := ServicePools[service.Name]
 
 	if !exists {
-
-		fmt.Printf("Initially created service pool for: %+v\n", service.Name)
 		ServicePools[service.Name] = &loadbalancer.ServicePool{Services: []*loadbalancer.Service{}, Current: 0}
+		log.Info().Msg("Discovery service created service pool for: " + service.Name)
 
 		servicePoolMux.Unlock()
-
 		registerService(service)
 	} else {
 
 		servicePoolMux.Unlock()
-
 		servicePool.UpdateService(service)
 	}
 }
