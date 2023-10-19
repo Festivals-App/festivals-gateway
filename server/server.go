@@ -3,6 +3,7 @@ package server
 import (
 	"crypto/tls"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
@@ -48,7 +49,13 @@ func (s *Server) setTLSHandling() {
 	}
 
 	tlsConfig := certManager.TLSConfig()
-	tlsConfig.GetCertificate = getDevelopmentOrLetsEncryptCert(s.Config, &certManager)
+	tlsConfig.GetCertificate = getDevelopmentOrLetsEncryptServerCert(s.Config, &certManager)
+
+	rootCACert, err := getRootCA(s.Config)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to read development root CA certificate")
+	}
+	tlsConfig.RootCAs.AppendCertsFromPEM(rootCACert)
 
 	s.CertManager = &certManager
 	s.TLSConfig = tlsConfig
@@ -163,15 +170,6 @@ func (s *Server) Run(host string) {
 // function prototype to inject config instance in handleRequest()
 type RequestHandlerFunction func(config *config.Config, w http.ResponseWriter, r *http.Request)
 
-/*
-func (s *Server) handleAPIRequest(requestHandler RequestHandlerFunction) http.HandlerFunc {
-
-	return authentication.IsEntitled(s.Config.APIKeys, func(w http.ResponseWriter, r *http.Request) {
-		requestHandler(s.Config, w, r)
-	})
-}
-*/
-
 func (s *Server) handleAdminRequest(requestHandler RequestHandlerFunction) http.HandlerFunc {
 
 	return authentication.IsEntitled(s.Config.AdminKeys, func(w http.ResponseWriter, r *http.Request) {
@@ -186,7 +184,7 @@ func (s *Server) handleRequestWithoutValidation(requestHandler RequestHandlerFun
 	})
 }
 
-func getDevelopmentOrLetsEncryptCert(conf *config.Config, certManager *autocert.Manager) func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
+func getDevelopmentOrLetsEncryptServerCert(conf *config.Config, certManager *autocert.Manager) func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
 	return func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
 
 		certificate, err := tls.LoadX509KeyPair(conf.TLSCert, conf.TLSKey)
@@ -200,4 +198,13 @@ func getDevelopmentOrLetsEncryptCert(conf *config.Config, certManager *autocert.
 		log.Debug().Msg("Using development TLS certificates")
 		return &certificate, err
 	}
+}
+
+func getRootCA(conf *config.Config) ([]byte, error) {
+
+	rootCACer, err := os.ReadFile(conf.TLSRootCert)
+	if err != nil {
+		return nil, err
+	}
+	return rootCACer, nil
 }
