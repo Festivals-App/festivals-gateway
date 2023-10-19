@@ -184,32 +184,35 @@ func getDevelopmentOrLetsEncryptServerCert(conf *config.Config, certManager *aut
 
 		certificate, err := tls.LoadX509KeyPair(conf.TLSCert, conf.TLSKey)
 		if err != nil {
+			log.Info().Err(err).Msg("Failed to load server cert and key files. Trying fallback to Let’s Encrypt autocert.")
 			if config.IsRunningInProduction() && conf.ServicePort == 443 {
 				log.Trace().Str("type", "server").Msg("Using Letsencrypt autocert")
 				return certManager.GetCertificate(hello)
 			}
 			log.Panic().Err(err).Str("type", "server").Msg("Failed to load development certificates or serving on the wrong TLS port")
 		}
-		rootCACertContent, err := os.ReadFile("/usr/local/festivals-gateway/ca.crt")
+		rootCACert, err := getRootCA()
 		if err != nil {
-			log.Panic().Err(err).Str("type", "server").Msg("Failed to read development root CA certificate")
+			log.Panic().Err(err).Str("type", "server").Msg("Failed to get development root CA certificate")
 		}
-		block, _ := pem.Decode(rootCACertContent)
-		rootCACert, err := x509.ParseCertificate(block.Bytes)
-		if err != nil {
-			log.Panic().Err(err).Str("type", "server").Msg("Failed to parse development root CA certificate content")
-		}
-		certificate.Certificate = append(certificate.Certificate, rootCACert.Raw)
+		certificate.Certificate = append(certificate.Certificate, rootCACert)
 		log.Debug().Msg("Using development server TLS certificates")
 		return &certificate, err
 	}
 }
 
-func getRootCA(conf *config.Config) ([]byte, error) {
+func getRootCA() ([]byte, error) {
 
-	rootCACer, err := os.ReadFile("/usr/local/festivals-gateway/ca.crt")
+	rootCACertContent, err := os.ReadFile("/usr/local/festivals-gateway/ca.crt")
 	if err != nil {
+		log.Error().Err(err).Str("type", "server").Msg("Failed to read development root CA certificate")
 		return nil, err
 	}
-	return rootCACer, nil
+	block, _ := pem.Decode(rootCACertContent)
+	rootCACert, err := x509.ParseCertificate(block.Bytes)
+	if err != nil {
+		log.Error().Err(err).Str("type", "server").Msg("Failed to parse development root CA certificate content")
+		return nil, err
+	}
+	return rootCACert.Raw, nil
 }
