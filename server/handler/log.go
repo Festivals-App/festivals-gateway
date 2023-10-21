@@ -2,8 +2,8 @@ package handler
 
 import (
 	"errors"
-	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/rs/zerolog/log"
@@ -33,7 +33,7 @@ func GetTraceLog(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
 func Log(location string) (string, error) {
 
-	l, err := ioutil.ReadFile(location)
+	l, err := os.ReadFile(location)
 	if err != nil {
 		return "", errors.New("Failed to read log file at: '" + location + "' with error: " + err.Error())
 	}
