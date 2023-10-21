@@ -8,7 +8,6 @@ require (
 )
 
 require (
-	github.com/go-chi/chi v1.5.5
 	github.com/go-chi/hostrouter v0.2.0
 	github.com/google/go-github v17.0.0+incompatible
 	github.com/rs/zerolog v1.31.0
@@ -26,4 +25,4 @@ require (
 	golang.org/x/text v0.13.0 // indirect
 )
 
-require github.com/Festivals-App/festivals-identity-server v0.0.5
+require github.com/Festivals-App/festivals-identity-server v0.0.6
