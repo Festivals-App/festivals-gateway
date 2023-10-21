@@ -2,16 +2,14 @@ package server
 
 import (
 	"crypto/tls"
-	"crypto/x509"
-	"encoding/pem"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/handler"
 	"github.com/Festivals-App/festivals-gateway/server/logger"
 	"github.com/Festivals-App/festivals-identity-server/authentication"
+	"github.com/Festivals-App/festivals-identity-server/festivalspki"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/hostrouter"
@@ -51,7 +49,7 @@ func (s *Server) setTLSHandling() {
 	}
 
 	tlsConfig := certManager.TLSConfig()
-	tlsConfig.GetCertificate = getDevelopmentOrLetsEncryptServerCert(s.Config, &certManager)
+	tlsConfig.GetCertificate = festivalspki.LoadServerCertificates(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert, &certManager)
 	s.CertManager = &certManager
 	s.TLSConfig = tlsConfig
 }
@@ -177,42 +175,4 @@ func (s *Server) handleRequestWithoutValidation(requestHandler RequestHandlerFun
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestHandler(s.Config, w, r)
 	})
-}
-
-func getDevelopmentOrLetsEncryptServerCert(conf *config.Config, certManager *autocert.Manager) func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
-	return func(hello *tls.ClientHelloInfo) (*tls.Certificate, error) {
-
-		certificate, err := tls.LoadX509KeyPair(conf.TLSCert, conf.TLSKey)
-		if err != nil {
-			log.Info().Err(err).Msg("Failed to load server cert and key files. Trying fallback to Let’s Encrypt autocert.")
-			if config.IsRunningInProduction() && conf.ServicePort == 443 {
-				log.Trace().Str("type", "server").Msg("Using Letsencrypt autocert")
-				return certManager.GetCertificate(hello)
-			}
-			log.Panic().Err(err).Str("type", "server").Msg("Failed to load development certificates or serving on the wrong TLS port")
-		}
-		rootCACert, err := getRootCA()
-		if err != nil {
-			log.Panic().Err(err).Str("type", "server").Msg("Failed to get development root CA certificate")
-		}
-		certificate.Certificate = append(certificate.Certificate, rootCACert)
-		log.Debug().Msg("Using development server TLS certificates")
-		return &certificate, err
-	}
-}
-
-func getRootCA() ([]byte, error) {
-
-	rootCACertContent, err := os.ReadFile("/usr/local/festivals-gateway/ca.crt")
-	if err != nil {
-		log.Error().Err(err).Str("type", "server").Msg("Failed to read development root CA certificate")
-		return nil, err
-	}
-	block, _ := pem.Decode(rootCACertContent)
-	rootCACert, err := x509.ParseCertificate(block.Bytes)
-	if err != nil {
-		log.Error().Err(err).Str("type", "server").Msg("Failed to parse development root CA certificate content")
-		return nil, err
-	}
-	return rootCACert.Raw, nil
 }

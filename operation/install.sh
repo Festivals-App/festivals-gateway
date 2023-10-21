@@ -119,6 +119,9 @@ elif ! [ "$(uname -s)" = "Darwin" ]; then
   exit 1
 fi
 
+# Download FestivalsApp Root CA certificate
+--> to /usr/local/festivals-gateway/ca.crt
+
 # Remving unused files
 #
 echo "Cleanup..."
