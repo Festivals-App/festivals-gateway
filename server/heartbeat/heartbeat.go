@@ -2,6 +2,7 @@ package heartbeat
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"net/http"
 	"time"
@@ -14,15 +15,35 @@ type Heartbeat struct {
 	Available bool   `json:"available"`
 }
 
-func SendHeartbeat(url string, serviceKey string, beat *Heartbeat) error {
+func SendHeartbeat(url string, serviceKey string, clientCert string, clientKey string, rootCA string, beat *Heartbeat) error {
 
 	heartbeatwave, err := json.Marshal(beat)
 	if err != nil {
 		return err
 	}
 
+	cert, err := tls.LoadX509KeyPair(clientCert, clientKey)
+	if err != nil {
+		return err
+	}
+
+	/*
+		cert, err := festivalspki.LoadX509Certificate(rootCA)
+		if err != nil {
+			return err
+		}
+	*/
+
+	tlsConfig := &tls.Config{
+		Certificates: []tls.Certificate{cert},
+	}
+	transport := &http.Transport{
+		TLSClientConfig: tlsConfig,
+	}
+
 	client := &http.Client{
-		Timeout: time.Second * 2,
+		Timeout:   time.Second * 2,
+		Transport: transport,
 	}
 
 	request, err := http.NewRequest("POST", url, bytes.NewBuffer(heartbeatwave))
