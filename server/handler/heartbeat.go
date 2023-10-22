@@ -24,7 +24,7 @@ func ReceivedHeartbeat(conf *config.Config, w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	url, err := url.Parse("http://" + beat.Host + ":" + strconv.Itoa(beat.Port))
+	url, err := url.Parse("https://" + beat.Host + ":" + strconv.Itoa(beat.Port))
 	if err != nil {
 		log.Error().Err(err).Msg("failed to parse heartbeat sender url")
 		respondError(w, http.StatusBadRequest, "i don't have any feelings for you")
