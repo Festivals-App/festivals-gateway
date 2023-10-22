@@ -68,7 +68,6 @@ func (s *Server) setMiddleware() {
 func (s *Server) setRoutes() {
 
 	hr := hostrouter.New()
-
 	base := s.Config.ServiceBindHost + ":" + strconv.Itoa(s.Config.ServicePort)
 
 	if s.Config.ServicePort == 80 || s.Config.ServicePort == 443 {
@@ -145,17 +144,15 @@ func GetFestivalsIdentityAPIRouter(s *Server) chi.Router {
 	return r
 }
 
-// Run the server on it's router
-func (s *Server) Run(host string) {
+func (s *Server) Run(conf *config.Config) {
 
 	server := http.Server{
-		Addr:      host,
+		Addr:      conf.ServiceBindHost + ":" + strconv.Itoa(conf.ServicePort),
 		Handler:   s.Router,
 		TLSConfig: s.TLSConfig,
 	}
 
-	specifiedInTLSConfig := ""
-	if err := server.ListenAndServeTLS(specifiedInTLSConfig, specifiedInTLSConfig); err != nil {
+	if err := server.ListenAndServeTLS("", ""); err != nil {
 		log.Fatal().Err(err).Str("type", "server").Msg("Failed to run server")
 	}
 }

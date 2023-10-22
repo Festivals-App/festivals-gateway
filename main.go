@@ -31,7 +31,7 @@ func main() {
 	go http.ListenAndServe(":80", serverInstance.CertManager.HTTPHandler(nil))
 	log.Info().Msg("Start redirecting http traffic from port 80 to port " + strconv.Itoa(serverInstance.Config.ServicePort) + " and https")
 
-	go serverInstance.Run(":" + strconv.Itoa(conf.ServicePort))
+	go serverInstance.Run(conf)
 	log.Info().Msg("Server did start.")
 
 	go sendHeartbeat(conf)
