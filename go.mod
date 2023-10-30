@@ -25,4 +25,4 @@ require (
 	golang.org/x/text v0.13.0 // indirect
 )
 
-require github.com/Festivals-App/festivals-identity-server v0.0.6
+require github.com/Festivals-App/festivals-identity-server v0.0.7
