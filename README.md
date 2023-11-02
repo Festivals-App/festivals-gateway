@@ -1,12 +1,14 @@
-<h1 align="center">
-    Festivals Gateway Server
-</h1>
-
 <p align="center">
    <a href="https://github.com/festivals-app/festivals-gateway/commits/" title="Last Commit"><img src="https://img.shields.io/github/last-commit/festivals-app/festivals-gateway?style=flat"></a>
    <a href="https://github.com/festivals-app/festivals-gateway/issues" title="Open Issues"><img src="https://img.shields.io/github/issues/festivals-app/festivals-gateway?style=flat"></a>
    <a href="./LICENSE" title="License"><img src="https://img.shields.io/github/license/festivals-app/festivals-gateway.svg"></a>
 </p>
+
+<h1 align="center">
+  <br/><br/>
+    Festivals Gateway Server
+  <br/><br/>
+</h1>
 
 <p align="center">
   <a href="#development">Development</a> •
@@ -18,6 +20,8 @@
 </p>
 
 The service gateway for the FestivalsAPI, providing access to the [FestivalsAPI](https://github.com/Festivals-App/festivals-server), [Website](https://github.com/Festivals-App/festivals-website), [static file server](https://github.com/Festivals-App/festivals-fileserver) and the [identity service](https://github.com/Festivals-App/festivals-identity-server).
+
+![Figure 1: Architecture Overview Highlighted](https://github.com/Festivals-App/festivals-documentation/blob/main/images/architecture/overview_gate.png "Figure 1: Architecture Overview Highlighted")
 
 ## Development
 
@@ -87,19 +91,18 @@ The documentation repository contains technical documents, architecture informat
 
 ## Engage
 
-TBA
+I welcome every contribution, whether it is a pull request or a fixed typo. The best place to discuss questions and suggestions regarding the festivals-gateway is the [issues](https://github.com/festivals-app/festivals-gateway/issues/) section. More general information and a good starting point if you want to get involved is the [festival-documentation](https://github.com/Festivals-App/festivals-documentation) repository.
 
 The following channels are available for discussions, feedback, and support requests:
 
 | Type                     | Channel                                                |
 | ------------------------ | ------------------------------------------------------ |
 | **General Discussion**   | <a href="https://github.com/festivals-app/festivals-documentation/issues/new/choose" title="General Discussion"><img src="https://img.shields.io/github/issues/festivals-app/festivals-documentation/question.svg?style=flat-square"></a> </a>   |
-| **Concept Feedback**    | <a href="https://github.com/festivals-app/festivals-documentation/issues/new/choose" title="Open Concept Feedback"><img src="https://img.shields.io/github/issues/festivals-app/festivals-documentation/architecture.svg?style=flat-square"></a>  |
-| **Other Requests**    | <a href="mailto:phisto05@gmail.com" title="Email Festivals Team"><img src="https://img.shields.io/badge/email-Festivals%20team-green?logo=mail.ru&style=flat-square&logoColor=white"></a>   |
+| **Other Requests**    | <a href="mailto:simon.cay.gaus@gmail.com" title="Email me"><img src="https://img.shields.io/badge/email-Simon-green?logo=mail.ru&style=flat-square&logoColor=white"></a>   |
 
 ## Licensing
 
-Copyright (c) 2020 Simon Gaus.
+Copyright (c) 2020-2023 Simon Gaus.
 
 Licensed under the **GNU Lesser General Public License v3.0** (the "License"); you may not use this file except in compliance with the License.
 
