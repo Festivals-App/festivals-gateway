@@ -41,8 +41,7 @@ TBA
 
 ### VM deployment
 
-The install, update and uninstall scripts should work with any system that uses *systemd* and *firewalld*.
-Additionally the scripts will somewhat work under macOS but won't configure the firewall or launch service.
+The install and update scripts should work with any system that uses *systemd* and *firewalld*.
 
 Installing
 ```bash
@@ -60,12 +59,6 @@ sudo ./update.sh
 ### Server
 
 All of the scripts require Ubuntu 20 LTS as the operating system and that the server has already been initialised, see the steps to do that [here](https://github.com/Festivals-App/festivals-documentation/tree/master/deployment/general-vm-setup).
-
-TBA
-
-### Docker
-
-TBA
 
 ## Usage
 
