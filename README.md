@@ -6,10 +6,15 @@
 
 <h1 align="center">
   <br/><br/>
-    Festivals Gateway Server
+    Festivals App Gateway
   <br/><br/>
 </h1>
 
+The service gateway for the FestivalsAPI, providing access to the [FestivalsAPI](https://github.com/Festivals-App/festivals-server), [Website](https://github.com/Festivals-App/festivals-website), [static file server](https://github.com/Festivals-App/festivals-fileserver) and the [identity service](https://github.com/Festivals-App/festivals-identity-server).
+
+![Figure 1: Architecture Overview Highlighted](https://github.com/Festivals-App/festivals-documentation/blob/main/images/architecture/overview_gate.png "Figure 1: Architecture Overview Highlighted")
+
+<hr />
 <p align="center">
   <a href="#development">Development</a> •
   <a href="#deployment">Deployment</a> •
@@ -18,10 +23,7 @@
   <a href="#engage">Engage</a> •
   <a href="#licensing">Licensing</a>
 </p>
-
-The service gateway for the FestivalsAPI, providing access to the [FestivalsAPI](https://github.com/Festivals-App/festivals-server), [Website](https://github.com/Festivals-App/festivals-website), [static file server](https://github.com/Festivals-App/festivals-fileserver) and the [identity service](https://github.com/Festivals-App/festivals-identity-server).
-
-![Figure 1: Architecture Overview Highlighted](https://github.com/Festivals-App/festivals-documentation/blob/main/images/architecture/overview_gate.png "Figure 1: Architecture Overview Highlighted")
+<hr />
 
 ## Development
 
