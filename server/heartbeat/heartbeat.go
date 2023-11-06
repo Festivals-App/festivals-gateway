@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"net/http"
-	"time"
 )
 
 type Heartbeat struct {
@@ -27,13 +26,6 @@ func SendHeartbeat(url string, serviceKey string, clientCert string, clientKey s
 		return err
 	}
 
-	/*
-		cert, err := festivalspki.LoadX509Certificate(rootCA)
-		if err != nil {
-			return err
-		}
-	*/
-
 	tlsConfig := &tls.Config{
 		Certificates: []tls.Certificate{cert},
 	}
@@ -42,7 +34,6 @@ func SendHeartbeat(url string, serviceKey string, clientCert string, clientKey s
 	}
 
 	client := &http.Client{
-		Timeout:   time.Second * 2,
 		Transport: transport,
 	}
 
