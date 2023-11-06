@@ -13,7 +13,6 @@ type Config struct {
 	ServiceBindHost    string
 	ServicePort        int
 	ServiceKey         string
-	Website            string
 	TLSRootCert        string
 	TLSCert            string
 	TLSKey             string
@@ -54,7 +53,6 @@ func ParseConfig(cfgFile string) *Config {
 	serviceBindHost := content.Get("service.bind-host").(string)
 	servicePort := content.Get("service.port").(int64)
 	serviceKey := content.Get("service.key").(string)
-	website := content.Get("service.website").(string)
 
 	tlsrootcert := content.Get("tls.festivaslapp-root-ca").(string)
 	tlscert := content.Get("tls.cert").(string)
@@ -82,7 +80,6 @@ func ParseConfig(cfgFile string) *Config {
 		TLSRootCert:        tlsrootcert,
 		TLSCert:            tlscert,
 		TLSKey:             tlskey,
-		Website:            website,
 		LoversEar:          loversear,
 		Interval:           int(interval),
 		APIKeys:            keys,

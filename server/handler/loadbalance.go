@@ -16,18 +16,6 @@ var servicePoolMux sync.RWMutex
 
 var Pools sync.Map
 
-func GoToFestivalsWebsite(conf *config.Config, w http.ResponseWriter, r *http.Request) {
-
-	url, err := loadbalancedHost("festivals-website")
-	if err != nil {
-		respondError(w, http.StatusServiceUnavailable, err.Error())
-		return
-	}
-
-	rp := httputil.NewSingleHostReverseProxy(url)
-	rp.ServeHTTP(w, r)
-}
-
 func GoToFestivalsWebsiteNode(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
 	url, err := loadbalancedHost("festivals-website-node")
@@ -43,6 +31,18 @@ func GoToFestivalsWebsiteNode(conf *config.Config, w http.ResponseWriter, r *htt
 func GoToFestivalsAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
 	url, err := loadbalancedHost("festivals-server")
+	if err != nil {
+		respondError(w, http.StatusServiceUnavailable, err.Error())
+		return
+	}
+
+	rp := httputil.NewSingleHostReverseProxy(url)
+	rp.ServeHTTP(w, r)
+}
+
+func GoToFestivalsDatabase(conf *config.Config, w http.ResponseWriter, r *http.Request) {
+
+	url, err := loadbalancedHost("festivals-database")
 	if err != nil {
 		respondError(w, http.StatusServiceUnavailable, err.Error())
 		return

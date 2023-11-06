@@ -40,7 +40,7 @@ func (s *Server) Initialize(config *config.Config) {
 func (s *Server) setTLSHandling() {
 
 	base := s.Config.ServiceBindHost
-	hosts := []string{base, "www." + base, "website." + base, "gateway." + base, "discovery." + base, "api." + base, "files." + base, "images." + base}
+	hosts := []string{base, "website." + base, "gateway." + base, "discovery." + base, "api." + base, "files." + base, "images." + base}
 
 	certManager := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
@@ -48,6 +48,7 @@ func (s *Server) setTLSHandling() {
 		Cache:      autocert.DirCache("/etc/letsencrypt/live/" + base),
 	}
 
+	// tlsConfig = &tls.Config{}
 	tlsConfig := certManager.TLSConfig()
 	tlsConfig.ClientAuth = tls.RequireAndVerifyClientCert
 	tlsConfig.GetCertificate = festivalspki.LoadServerCertificates(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert, &certManager)
@@ -75,23 +76,16 @@ func (s *Server) setRoutes() {
 		base = s.Config.ServiceBindHost
 	}
 
-	hr.Map(base, GetWebsiteRouter(s))
-	hr.Map("www."+base, GetWebsiteRouter(s))
 	hr.Map("website."+base, GetWebsiteNodeRouter(s))
 	hr.Map("gateway."+base, GetGatewayRouter(s))
 	hr.Map("discovery."+base, GetDiscoveryRouter(s))
 	hr.Map("api."+base, GetFestivalsAPIRouter(s))
+	hr.Map("database."+base, GetFestivalsDatabaseRouter(s))
 	hr.Map("files."+base, GetFestivalsFilesAPIRouter(s))
+	hr.Map("identity."+base, GetFestivalsIdentityAPIRouter(s))
 
 	// Mount the host router
 	s.Router.Mount("/", hr)
-}
-
-func GetWebsiteRouter(s *Server) chi.Router {
-
-	r := chi.NewRouter()
-	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsWebsite))
-	return r
 }
 
 func GetWebsiteNodeRouter(s *Server) chi.Router {
@@ -128,6 +122,13 @@ func GetFestivalsAPIRouter(s *Server) chi.Router {
 
 	r := chi.NewRouter()
 	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsAPI))
+	return r
+}
+
+func GetFestivalsDatabaseRouter(s *Server) chi.Router {
+
+	r := chi.NewRouter()
+	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsDatabase))
 	return r
 }
 
