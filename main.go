@@ -44,7 +44,7 @@ func main() {
 
 func sendHeartbeat(conf *config.Config) {
 	for {
-		timer := time.After(time.Second * 2)
+		timer := time.After(time.Second * time.Duration(conf.Interval))
 		<-timer
 		var beat *heartbeat.Heartbeat = &heartbeat.Heartbeat{Service: "festivals-gateway", Host: "https://gateway." + conf.ServiceBindHost, Port: conf.ServicePort, Available: true}
 		err := heartbeat.SendHeartbeat(conf.LoversEar, conf.ServiceKey, conf.TLSCert, conf.TLSKey, conf.TLSRootCert, beat)

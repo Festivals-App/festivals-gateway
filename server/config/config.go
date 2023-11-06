@@ -18,6 +18,7 @@ type Config struct {
 	TLSCert            string
 	TLSKey             string
 	LoversEar          string
+	Interval           int
 	APIKeys            []string
 	AdminKeys          []string
 }
@@ -60,6 +61,7 @@ func ParseConfig(cfgFile string) *Config {
 	tlskey := content.Get("tls.key").(string)
 
 	loversear := content.Get("heartbeat.endpoint").(string)
+	interval := content.Get("heartbeat.interval").(int64)
 
 	keyValues := content.Get("authentication.api-keys").([]interface{})
 	keys := make([]string, len(keyValues))
@@ -82,6 +84,7 @@ func ParseConfig(cfgFile string) *Config {
 		TLSKey:             tlskey,
 		Website:            website,
 		LoversEar:          loversear,
+		Interval:           int(interval),
 		APIKeys:            keys,
 		AdminKeys:          adminKeys,
 	}

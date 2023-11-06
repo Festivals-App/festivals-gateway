@@ -15,6 +15,7 @@ key = "/usr/local/festivals-gateway/ca.key"
 
 [heartbeat]
 endpoint = "localhost"
+interval = 6
 
 [authentication]
 api-keys = ["TEST_API_KEY_001", "TEST_API_KEY_002", "TEST_API_KEY_003"]
