@@ -14,21 +14,17 @@ type Heartbeat struct {
 	Available bool   `json:"available"`
 }
 
-func SendHeartbeat(url string, serviceKey string, clientCert string, clientKey string, rootCA string, beat *Heartbeat) error {
-
-	heartbeatwave, err := json.Marshal(beat)
-	if err != nil {
-		return err
-	}
+func HeartbeatClient(clientCert string, clientKey string) (*http.Client, error) {
 
 	cert, err := tls.LoadX509KeyPair(clientCert, clientKey)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	tlsConfig := &tls.Config{
 		Certificates: []tls.Certificate{cert},
 	}
+
 	transport := &http.Transport{
 		TLSClientConfig: tlsConfig,
 	}
@@ -37,7 +33,17 @@ func SendHeartbeat(url string, serviceKey string, clientCert string, clientKey s
 		Transport: transport,
 	}
 
-	request, err := http.NewRequest("POST", url, bytes.NewBuffer(heartbeatwave))
+	return client, nil
+}
+
+func SendHeartbeat(client *http.Client, url string, serviceKey string, beat *Heartbeat) error {
+
+	heartbeatwave, err := json.Marshal(beat)
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(heartbeatwave))
 	if err != nil {
 		return err
 	}
