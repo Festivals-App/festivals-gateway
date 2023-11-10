@@ -16,6 +16,7 @@ require (
 )
 
 require (
+	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -26,6 +27,6 @@ require (
 )
 
 require (
-	github.com/Festivals-App/festivals-identity-server v0.1.0
+	github.com/Festivals-App/festivals-identity-server v0.2.0
 	github.com/Festivals-App/festivals-pki v0.0.3
 )
