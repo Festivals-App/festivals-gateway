@@ -9,7 +9,7 @@ import (
 	"github.com/Festivals-App/festivals-gateway/server/handler"
 	"github.com/Festivals-App/festivals-gateway/server/logger"
 	"github.com/Festivals-App/festivals-identity-server/authentication"
-	"github.com/Festivals-App/festivals-identity-server/festivalspki"
+	festivalspki "github.com/Festivals-App/festivals-pki"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/hostrouter"
@@ -51,7 +51,7 @@ func (s *Server) setTLSHandling() {
 	// tlsConfig = &tls.Config{}
 	tlsConfig := certManager.TLSConfig()
 	tlsConfig.ClientAuth = tls.RequireAndVerifyClientCert
-	tlsConfig.GetCertificate = festivalspki.LoadServerCertificates(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert, &certManager)
+	tlsConfig.GetCertificate = festivalspki.LoadServerCertificateHandler(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert)
 	s.CertManager = &certManager
 	s.TLSConfig = tlsConfig
 }
