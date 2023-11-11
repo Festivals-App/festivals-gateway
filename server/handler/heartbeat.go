@@ -38,19 +38,16 @@ func ReceivedHeartbeat(conf *config.Config, w http.ResponseWriter, r *http.Reque
 
 func registerService(service *loadbalancer.Service) {
 
-	servicePoolMux.Lock()
+	Loadbalancer.ServicesMux.Lock()
+	defer Loadbalancer.ServicesMux.Unlock()
 
-	servicePool, exists := ServicePools[service.Name]
-
+	servicePool, exists := Loadbalancer.Services[service.Name]
 	if !exists {
-		ServicePools[service.Name] = &loadbalancer.ServicePool{Services: []*loadbalancer.Service{}, Current: 0}
+		// check for service name
+		servicePool = &loadbalancer.ServicePool{}
+		Loadbalancer.Services[service.Name] = servicePool
 		log.Info().Msg("Discovery service created service pool for: " + service.Name)
-
-		servicePoolMux.Unlock()
-		registerService(service)
-	} else {
-
-		servicePoolMux.Unlock()
-		servicePool.UpdateService(service)
 	}
+
+	servicePool.UpdateService(service)
 }

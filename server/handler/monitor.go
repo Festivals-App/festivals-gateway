@@ -9,18 +9,16 @@ import (
 
 func GetServices(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
-	var nodes []status.MonitorNode = []status.MonitorNode{}
+	var nodes = []status.MonitorNode{}
 
-	servicePoolMux.RLock()
+	Loadbalancer.ServicesMux.RLock()
+	defer Loadbalancer.ServicesMux.RUnlock()
 
-	for _, element := range ServicePools {
+	for _, element := range Loadbalancer.Services {
 		for _, service := range element.Services {
 			node := status.MonitorNode{Type: service.Name, Location: service.URL.String(), LastSeen: service.SeenAt()}
 			nodes = append(nodes, node)
 		}
 	}
-
-	servicePoolMux.RUnlock()
-
 	respondJSON(w, http.StatusOK, nodes)
 }
