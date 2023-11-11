@@ -27,6 +27,9 @@ uninstall:
 run:
 	./festivals-gateway
 
+test:
+	go test ./server/loadbalancer
+
 stop:
 	killall festivals-gateway
 
