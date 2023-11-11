@@ -11,7 +11,6 @@ require (
 	github.com/go-chi/hostrouter v0.2.0
 	github.com/google/go-github v17.0.0+incompatible
 	github.com/rs/zerolog v1.31.0
-	golang.org/x/crypto v0.15.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
@@ -20,9 +19,7 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	golang.org/x/net v0.18.0 // indirect
 	golang.org/x/sys v0.14.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
 )
 
 require (
