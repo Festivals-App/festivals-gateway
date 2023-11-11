@@ -14,16 +14,19 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/hostrouter"
 	"github.com/rs/zerolog/log"
-
-	"golang.org/x/crypto/acme/autocert"
 )
 
 // Server has router and tls configuration
 type Server struct {
-	Router      *chi.Mux
-	Config      *config.Config
-	CertManager *autocert.Manager
-	TLSConfig   *tls.Config
+	Router    *chi.Mux
+	Config    *config.Config
+	TLSConfig *tls.Config
+}
+
+func NewServer(config *config.Config) *Server {
+	server := &Server{}
+	server.Initialize(config)
+	return server
 }
 
 // Initialize the server with predefined configuration
@@ -39,20 +42,9 @@ func (s *Server) Initialize(config *config.Config) {
 
 func (s *Server) setTLSHandling() {
 
-	base := s.Config.ServiceBindHost
-	hosts := []string{base, "website." + base, "gateway." + base, "discovery." + base, "api." + base, "files." + base, "images." + base}
-
-	certManager := autocert.Manager{
-		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist(hosts...),
-		Cache:      autocert.DirCache("/etc/letsencrypt/live/" + base),
-	}
-
-	// tlsConfig = &tls.Config{}
-	tlsConfig := certManager.TLSConfig()
+	tlsConfig := &tls.Config{}
 	tlsConfig.ClientAuth = tls.RequireAndVerifyClientCert
 	tlsConfig.GetCertificate = festivalspki.LoadServerCertificateHandler(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert)
-	s.CertManager = &certManager
 	s.TLSConfig = tlsConfig
 }
 
@@ -155,6 +147,7 @@ func (s *Server) Run(conf *config.Config) {
 	}
 
 	if err := server.ListenAndServeTLS("", ""); err != nil {
+		// error handling
 		log.Fatal().Err(err).Str("type", "server").Msg("Failed to run server")
 	}
 }

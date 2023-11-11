@@ -32,22 +32,6 @@ func ReceivedHeartbeat(conf *config.Config, w http.ResponseWriter, r *http.Reque
 	}
 
 	service := &loadbalancer.Service{Name: beat.Service, URL: url, At: time.Now(), Alive: beat.Available}
-	go registerService(service)
+	go Loadbalancer.Register(service)
 	respondCode(w, http.StatusAccepted)
-}
-
-func registerService(service *loadbalancer.Service) {
-
-	Loadbalancer.ServicesMux.Lock()
-	defer Loadbalancer.ServicesMux.Unlock()
-
-	servicePool, exists := Loadbalancer.Services[service.Name]
-	if !exists {
-		// check for service name
-		servicePool = &loadbalancer.ServicePool{}
-		Loadbalancer.Services[service.Name] = servicePool
-		log.Info().Msg("Discovery service created service pool for: " + service.Name)
-	}
-
-	servicePool.UpdateService(service)
 }

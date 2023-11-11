@@ -72,6 +72,8 @@ func ParseConfig(cfgFile string) *Config {
 		adminKeys[i] = v.(string)
 	}
 
+	checkForDebugMode()
+
 	return &Config{
 		ServiceBindAddress: serviceBindAdress,
 		ServiceBindHost:    serviceBindHost,
@@ -87,7 +89,7 @@ func ParseConfig(cfgFile string) *Config {
 	}
 }
 
-func CheckForArguments() {
+func checkForDebugMode() {
 
 	if len(os.Args) == 2 {
 		if os.Args[1] == "--debug" {

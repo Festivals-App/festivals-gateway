@@ -39,7 +39,6 @@ func goToLoadbalancedHost(service string, conf *config.Config, w http.ResponseWr
 		respondError(w, http.StatusServiceUnavailable, err.Error())
 		return
 	}
-
 	rp := httputil.NewSingleHostReverseProxy(host)
 	rp.ServeHTTP(w, r)
 }
