@@ -42,9 +42,10 @@ func (s *Server) Initialize(config *config.Config) {
 
 func (s *Server) setTLSHandling() {
 
-	tlsConfig := &tls.Config{}
-	tlsConfig.ClientAuth = tls.RequireAndVerifyClientCert
-	tlsConfig.GetCertificate = festivalspki.LoadServerCertificateHandler(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert)
+	tlsConfig := &tls.Config{
+		ClientAuth:     tls.RequireAndVerifyClientCert,
+		GetCertificate: festivalspki.LoadServerCertificateHandler(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert),
+	}
 	s.TLSConfig = tlsConfig
 }
 
