@@ -22,8 +22,8 @@ func main() {
 	go server.Run(conf)
 	log.Info().Msg("Server did start.")
 
-	//go sendHeartbeat(conf)
-	//log.Info().Msg("Heartbeat routine was started.")
+	go sendHeartbeat(conf)
+	log.Info().Msg("Heartbeat routine was started.")
 
 	// wait forever
 	// https://stackoverflow.com/questions/36419054/go-projects-main-goroutine-sleep-forever
