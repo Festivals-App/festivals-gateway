@@ -71,11 +71,11 @@ sleep 1
 
 ## Prepare log directory
 mkdir /var/log/festivals-gateway || { echo "Failed to create log directory. Exiting." ; exit 1; }
-chown "$WEB_USER":"$WEB_USER" /var/log/festivals-gateway
 echo "Create log directory at '/var/log/festivals-gateway'."
 
 ## Prepare server update workflow
 mv update.sh /usr/local/festivals-gateway/update.sh
+chmod +x /usr/local/festivals-gateway/update.sh
 cp /etc/sudoers /tmp/sudoers.bak
 echo "$WEB_USER ALL = (ALL) NOPASSWD: /usr/local/festivals-gateway/update.sh" >> /tmp/sudoers.bak
 # Check syntax of the backup file to make sure it is correct.
@@ -86,6 +86,12 @@ if [ $? -eq 0 ]; then
 else
   echo "Could not modify /etc/sudoers file. Please do this manually." ; exit 1;
 fi
+
+## Set appropriate permissions
+##
+chwon -R "$WEB_USER":"$WEB_USER" /usr/local/festivals-gateway
+chown -R "$WEB_USER":"$WEB_USER" /var/log/festivals-gateway
+chown "$WEB_USER":"$WEB_USER" /etc/festivals-gateway.conf
 
 # Enable and configure the firewall.
 #
@@ -120,7 +126,7 @@ elif ! [ "$(uname -s)" = "Darwin" ]; then
 fi
 
 # Download FestivalsApp Root CA certificate
---> to /usr/local/festivals-gateway/ca.crt
+#--> to /usr/local/festivals-gateway/ca.crt
 
 # Remving unused files
 #
@@ -132,5 +138,5 @@ sleep 1
 echo "Done!"
 sleep 1
 
-echo "You can start the server manually by running 'systemctl start festivals-gateway' after you updated the configuration file at '/etc/festivals-gateway.conf'"
+echo "You can start the server manually by running 'sudo systemctl start festivals-gateway' after you updated the configuration file at '/etc/festivals-gateway.conf'"
 sleep 1
