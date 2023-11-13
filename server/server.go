@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/handler"
@@ -142,9 +143,13 @@ func GetFestivalsIdentityAPIRouter(s *Server) chi.Router {
 func (s *Server) Run(conf *config.Config) {
 
 	server := http.Server{
-		Addr:      conf.ServiceBindHost + ":" + strconv.Itoa(conf.ServicePort),
-		Handler:   s.Router,
-		TLSConfig: s.TLSConfig,
+		ReadTimeout:       1 * time.Second,
+		WriteTimeout:      1 * time.Second,
+		IdleTimeout:       30 * time.Second,
+		ReadHeaderTimeout: 2 * time.Second,
+		Addr:              conf.ServiceBindHost + ":" + strconv.Itoa(conf.ServicePort),
+		Handler:           s.Router,
+		TLSConfig:         s.TLSConfig,
 	}
 
 	if err := server.ListenAndServeTLS("", ""); err != nil {
