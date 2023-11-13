@@ -82,6 +82,24 @@ func (s *Server) setRoutes() {
 	s.Router.Mount("/", hr)
 }
 
+func (s *Server) Run(conf *config.Config) {
+
+	server := http.Server{
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
+		Addr:              conf.ServiceBindHost + ":" + strconv.Itoa(conf.ServicePort),
+		Handler:           s.Router,
+		TLSConfig:         s.TLSConfig,
+	}
+
+	if err := server.ListenAndServeTLS("", ""); err != nil {
+		// error handling
+		log.Fatal().Err(err).Str("type", "server").Msg("Failed to run server")
+	}
+}
+
 func GetWebsiteNodeRouter(s *Server) chi.Router {
 
 	r := chi.NewRouter()
@@ -138,24 +156,6 @@ func GetFestivalsIdentityAPIRouter(s *Server) chi.Router {
 	r := chi.NewRouter()
 	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsIdentityAPI))
 	return r
-}
-
-func (s *Server) Run(conf *config.Config) {
-
-	server := http.Server{
-		ReadTimeout:       1 * time.Second,
-		WriteTimeout:      1 * time.Second,
-		IdleTimeout:       30 * time.Second,
-		ReadHeaderTimeout: 2 * time.Second,
-		Addr:              conf.ServiceBindHost + ":" + strconv.Itoa(conf.ServicePort),
-		Handler:           s.Router,
-		TLSConfig:         s.TLSConfig,
-	}
-
-	if err := server.ListenAndServeTLS("", ""); err != nil {
-		// error handling
-		log.Fatal().Err(err).Str("type", "server").Msg("Failed to run server")
-	}
 }
 
 // function prototype to inject config instance in handleRequest()
