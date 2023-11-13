@@ -89,7 +89,7 @@ fi
 
 ## Set appropriate permissions
 ##
-chwon -R "$WEB_USER":"$WEB_USER" /usr/local/festivals-gateway
+chown -R "$WEB_USER":"$WEB_USER" /usr/local/festivals-gateway
 chown -R "$WEB_USER":"$WEB_USER" /var/log/festivals-gateway
 chown "$WEB_USER":"$WEB_USER" /etc/festivals-gateway.conf
 
