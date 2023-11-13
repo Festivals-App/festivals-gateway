@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"net"
 	"net/http"
+	"time"
 )
 
 type Heartbeat struct {
@@ -21,16 +23,20 @@ func HeartbeatClient(clientCert string, clientKey string) (*http.Client, error) 
 		return nil, err
 	}
 
-	tlsConfig := &tls.Config{
-		Certificates: []tls.Certificate{cert},
-	}
-
-	transport := &http.Transport{
-		TLSClientConfig: tlsConfig,
-	}
-
 	client := &http.Client{
-		Transport: transport,
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				Certificates: []tls.Certificate{cert},
+			},
+			Dial: (&net.Dialer{
+				Timeout:   30 * time.Second,
+				KeepAlive: 30 * time.Second,
+			}).Dial,
+			TLSHandshakeTimeout:   10 * time.Second,
+			ResponseHeaderTimeout: 10 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
+		},
+		Timeout: 20 * time.Second,
 	}
 
 	return client, nil
@@ -43,6 +49,13 @@ func SendHeartbeat(client *http.Client, url string, serviceKey string, beat *Hea
 		return err
 	}
 
+	/*
+		http.Request{
+			Method: http.MethodPost,
+			URL: url,
+			Body: bytes.NewBuffer(heartbeatwave),
+		}
+	*/
 	request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(heartbeatwave))
 	if err != nil {
 		return err
