@@ -1,11 +1,6 @@
 package handler
 
-import (
-	"encoding/json"
-	"log"
-	"net/http"
-)
-
+/*
 // respondJSON makes the response with payload as json format
 func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
 
@@ -50,3 +45,4 @@ func respondCode(w http.ResponseWriter, code int) {
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(code)
 }
+*/

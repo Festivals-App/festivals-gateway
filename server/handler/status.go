@@ -5,19 +5,20 @@ import (
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/status"
+	servertools "github.com/Festivals-App/festivals-server-tools"
 )
 
 func GetVersion(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
-	respondString(w, http.StatusOK, status.VersionString())
+	servertools.RespondString(w, http.StatusOK, status.VersionString())
 }
 
 func GetInfo(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
-	respondJSON(w, http.StatusOK, status.InfoString())
+	servertools.RespondJSON(w, http.StatusOK, status.InfoString())
 }
 
 func GetHealth(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
-	respondCode(w, status.HealthStatus())
+	servertools.RespondCode(w, status.HealthStatus())
 }

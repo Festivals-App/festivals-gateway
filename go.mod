@@ -15,8 +15,11 @@ require (
 )
 
 require (
+	github.com/Festivals-App/festivals-server-tools v0.0.1 // indirect
+	github.com/go-chi/chi v1.5.5 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/google/uuid v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	golang.org/x/sys v0.14.0 // indirect

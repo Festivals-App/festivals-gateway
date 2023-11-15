@@ -8,9 +8,9 @@ import (
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/handler"
-	"github.com/Festivals-App/festivals-gateway/server/logger"
 	"github.com/Festivals-App/festivals-identity-server/authentication"
 	festivalspki "github.com/Festivals-App/festivals-pki"
+	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/hostrouter"
@@ -54,7 +54,7 @@ func (s *Server) setMiddleware() {
 	// tell the ruter which middleware to use
 	s.Router.Use(
 		// used to log the request
-		logger.Middleware(logger.TraceLogger("/var/log/festivals-gateway/trace.log")),
+		servertools.Middleware(servertools.TraceLogger("/var/log/festivals-gateway/trace.log")),
 		// tries to recover after panics
 		middleware.Recoverer,
 	)

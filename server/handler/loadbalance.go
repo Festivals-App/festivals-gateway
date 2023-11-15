@@ -10,6 +10,7 @@ import (
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/loadbalancer"
+	servertools "github.com/Festivals-App/festivals-server-tools"
 )
 
 func GoToFestivalsIdentityAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
@@ -36,11 +37,11 @@ func goToLoadbalancedHost(service string, conf *config.Config, w http.ResponseWr
 
 	host, err := loadbalancedHost(service)
 	if err != nil {
-		respondError(w, http.StatusServiceUnavailable, err.Error())
+		servertools.RespondError(w, http.StatusServiceUnavailable, err.Error())
 		return
 	}
-	rp := httputil.NewSingleHostReverseProxy(host)
-	rp.ServeHTTP(w, r)
+	reverseProxy := httputil.NewSingleHostReverseProxy(host)
+	reverseProxy.ServeHTTP(w, r)
 }
 
 // Allowed load balanced service identifier

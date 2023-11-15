@@ -5,6 +5,7 @@ import (
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/status"
+	servertools "github.com/Festivals-App/festivals-server-tools"
 )
 
 func GetServices(conf *config.Config, w http.ResponseWriter, r *http.Request) {
@@ -20,5 +21,5 @@ func GetServices(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 			nodes = append(nodes, node)
 		}
 	}
-	respondJSON(w, http.StatusOK, nodes)
+	servertools.RespondJSON(w, http.StatusOK, nodes)
 }
