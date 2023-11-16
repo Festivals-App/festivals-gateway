@@ -5,14 +5,13 @@ import (
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/status"
-	"github.com/Festivals-App/festivals-gateway/server/update"
 	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/rs/zerolog/log"
 )
 
 func MakeUpdate(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
-	newVersion, err := update.RunUpdate(status.ServerVersion, "Festivals-App", "festivals-gateway", "/usr/local/festivals-gateway/update.sh")
+	newVersion, err := servertools.RunUpdate(status.ServerVersion, "Festivals-App", "festivals-gateway", "/usr/local/festivals-gateway/update.sh")
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to update")
 		servertools.RespondError(w, http.StatusInternalServerError, "Failed to update")

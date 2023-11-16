@@ -9,15 +9,12 @@ require (
 
 require (
 	github.com/go-chi/hostrouter v0.2.0
-	github.com/google/go-github v17.0.0+incompatible
 	github.com/rs/zerolog v1.31.0
-	gopkg.in/natefinch/lumberjack.v2 v2.2.1
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 )
 
 require (
-	github.com/Festivals-App/festivals-server-tools v0.0.1 // indirect
-	github.com/go-chi/chi v1.5.5 // indirect
-	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/google/go-github/v56 v56.0.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -26,6 +23,7 @@ require (
 )
 
 require (
-	github.com/Festivals-App/festivals-identity-server v0.2.0
+	github.com/Festivals-App/festivals-identity-server v0.2.1
 	github.com/Festivals-App/festivals-pki v0.0.3
+	github.com/Festivals-App/festivals-server-tools v0.0.2
 )
