@@ -1,5 +1,3 @@
-github.com/Festivals-App/festivals-identity-server v0.2.1 h1:2+2EzQxBUIDLqdDrjLeSkxvMO6Iny1h1sDRcNteSfsM=
-github.com/Festivals-App/festivals-identity-server v0.2.1/go.mod h1:XSdaGi3M2vx118JCZkoxTFmyvt/aq9nqAjMwzjZEwBA=
 github.com/Festivals-App/festivals-pki v0.0.3 h1:rOJG08zFj6jdtcgBa2n2EsT1276ssx7P1ReoaQKFNVk=
 github.com/Festivals-App/festivals-pki v0.0.3/go.mod h1:q0/Ejy0SEGc5ciAOu6ya9JlIHoR/TLMKjAy62+8kcYQ=
 github.com/Festivals-App/festivals-server-tools v0.0.2 h1:EkKRPueBTQtJCExJtGheZIgwkl946Zl0JmwcqfiKYZk=

@@ -8,7 +8,6 @@ import (
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/handler"
-	"github.com/Festivals-App/festivals-identity-server/authentication"
 	festivalspki "github.com/Festivals-App/festivals-pki"
 	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/go-chi/chi/v5"
@@ -163,7 +162,7 @@ type RequestHandlerFunction func(config *config.Config, w http.ResponseWriter, r
 
 func (s *Server) handleAdminRequest(requestHandler RequestHandlerFunction) http.HandlerFunc {
 
-	return authentication.IsEntitled(s.Config.AdminKeys, func(w http.ResponseWriter, r *http.Request) {
+	return servertools.IsEntitled(s.Config.AdminKeys, func(w http.ResponseWriter, r *http.Request) {
 		requestHandler(s.Config, w, r)
 	})
 }
