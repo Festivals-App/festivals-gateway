@@ -23,7 +23,6 @@ fi
 #
 mkdir -p /usr/local/festivals-gateway/install || { echo "Failed to create working directory. Exiting." ; exit 1; }
 cd /usr/local/festivals-gateway/install || { echo "Failed to access working directory. Exiting." ; exit 1; }
-
 echo "Installing festivals-gateway using port 8080."
 sleep 1
 
@@ -87,12 +86,6 @@ else
   echo "Could not modify /etc/sudoers file. Please do this manually." ; exit 1;
 fi
 
-## Set appropriate permissions
-##
-chown -R "$WEB_USER":"$WEB_USER" /usr/local/festivals-gateway
-chown -R "$WEB_USER":"$WEB_USER" /var/log/festivals-gateway
-chown "$WEB_USER":"$WEB_USER" /etc/festivals-gateway.conf
-
 # Enable and configure the firewall.
 #
 if command -v ufw > /dev/null; then
@@ -124,6 +117,12 @@ elif ! [ "$(uname -s)" = "Darwin" ]; then
   echo "Systemd is missing and not on macOS. Exiting."
   exit 1
 fi
+
+## Set appropriate permissions
+##
+chown -R "$WEB_USER":"$WEB_USER" /usr/local/festivals-gateway
+chown -R "$WEB_USER":"$WEB_USER" /var/log/festivals-gateway
+chown "$WEB_USER":"$WEB_USER" /etc/festivals-gateway.conf
 
 # Download FestivalsApp Root CA certificate
 #--> to /usr/local/festivals-gateway/ca.crt
