@@ -1,6 +1,6 @@
 module github.com/Festivals-App/festivals-gateway
 
-go 1.21.3
+go 1.21.5
 
 require (
 	github.com/go-chi/chi/v5 v5.0.11
@@ -19,10 +19,10 @@ require (
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
 )
 
 require (
-	github.com/Festivals-App/festivals-pki v0.0.3
+	github.com/Festivals-App/festivals-pki v0.0.4
 	github.com/Festivals-App/festivals-server-tools v0.0.2
 )
