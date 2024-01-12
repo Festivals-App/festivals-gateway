@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"crypto/tls"
 	"errors"
 	"net/http"
 	"net/http/httputil"
@@ -8,10 +9,15 @@ import (
 	"slices"
 	"sync"
 
+	"github.com/rs/zerolog/log"
+
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/loadbalancer"
+	festivalspki "github.com/Festivals-App/festivals-pki"
 	servertools "github.com/Festivals-App/festivals-server-tools"
 )
+
+//"github.com/rs/zerolog/log"
 
 func GoToFestivalsIdentityAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 	goToLoadbalancedHost("festivals-identity-server", conf, w, r)
@@ -37,11 +43,45 @@ func goToLoadbalancedHost(service string, conf *config.Config, w http.ResponseWr
 
 	host, err := loadbalancedHost(service)
 	if err != nil {
+		log.Error().Err(err).Msg("Faile to get loadbalances host.")
 		servertools.RespondError(w, http.StatusServiceUnavailable, err.Error())
 		return
 	}
+
+	tls, err := serverTLSConfig(conf)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Faile to load server TLS configuration.")
+		servertools.RespondError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
 	reverseProxy := httputil.NewSingleHostReverseProxy(host)
+	reverseProxy.Transport = &http.Transport{
+		TLSClientConfig: tls,
+	}
 	reverseProxy.ServeHTTP(w, r)
+}
+
+func serverTLSConfig(conf *config.Config) (*tls.Config, error) {
+
+	rootCertPool, err := festivalspki.LoadCertificatePool(conf.TLSRootCert)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Faile to create certificate pool with root CA.")
+		return nil, err
+	}
+
+	certs, err := tls.LoadX509KeyPair(conf.TLSCert, conf.TLSKey)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Faile to load server certificate and key.")
+		return nil, err
+	}
+
+	tlsConfig := &tls.Config{
+		RootCAs:      rootCertPool,
+		Certificates: []tls.Certificate{certs},
+	}
+
+	return tlsConfig, nil
 }
 
 // Allowed load balanced service identifier
