@@ -6,7 +6,7 @@ REF=refs/tags/development
 export
 
 build:
-	go build -v -ldflags="-X 'github.com/Festivals-App/festivals-gateway/server/status.ServerVersion=$(VERSION)' -X 'github.com/Festivals-App/festivals-gateway/server/status.BuildTime=$(DATE)' -X 'github.com/Festivals-App/festivals-gateway/server/status.GitRef=$(REF)'" -o festivals-gateway main.go
+	go build -ldflags="-X 'github.com/Festivals-App/festivals-gateway/server/status.ServerVersion=$(VERSION)' -X 'github.com/Festivals-App/festivals-gateway/server/status.BuildTime=$(DATE)' -X 'github.com/Festivals-App/festivals-gateway/server/status.GitRef=$(REF)'" -o festivals-gateway main.go
 
 install:
 	cp festivals-gateway /usr/local/bin/festivals-gateway
