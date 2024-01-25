@@ -107,8 +107,8 @@ func loadbalancedHost(serviceIdentifier string) (*url.URL, error) {
 		return nil, errors.New("loadbalancer: no available backend server for " + serviceIdentifier)
 	}
 
-	Loadbalancer.ServicesMux.RLock()
-	defer Loadbalancer.ServicesMux.RUnlock()
+	Loadbalancer.ServicesMux.Lock()
+	defer Loadbalancer.ServicesMux.Unlock()
 
 	services, exists := Loadbalancer.Services[serviceIdentifier]
 	if !exists {

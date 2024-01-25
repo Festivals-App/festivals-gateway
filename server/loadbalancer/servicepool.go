@@ -2,7 +2,6 @@ package loadbalancer
 
 import (
 	"sync"
-	"sync/atomic"
 	"time"
 )
 
@@ -80,13 +79,6 @@ func (servicePool *ServicePool) GetNextService() *Service {
 	}
 
 	return nil
-}
-
-func (servicePool *ServicePool) NextIndex() int {
-
-	atomic.AddUint64(&servicePool.Current, uint64(1))
-	numberOfServices := uint64(len(servicePool.Services))
-	return int(servicePool.Current % numberOfServices)
 }
 
 func (servicePool *ServicePool) UpdateService(service *Service) {
