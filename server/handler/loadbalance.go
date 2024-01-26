@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"slices"
 	"sync"
+	"time"
 
 	"github.com/rs/zerolog/log"
 
@@ -58,6 +59,13 @@ func goToLoadbalancedHost(service string, conf *config.Config, w http.ResponseWr
 	reverseProxy := httputil.NewSingleHostReverseProxy(host)
 	reverseProxy.Transport = &http.Transport{
 		TLSClientConfig: tls,
+
+		TLSHandshakeTimeout:   10 * time.Second,
+		IdleConnTimeout:       10 * time.Second,
+		ResponseHeaderTimeout: 10 * time.Second,
+
+		MaxIdleConnsPerHost: 3000,
+		MaxIdleConns:        100,
 	}
 	reverseProxy.ServeHTTP(w, r)
 }
