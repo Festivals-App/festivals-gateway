@@ -62,10 +62,12 @@ func goToLoadbalancedHost(service string, conf *config.Config, w http.ResponseWr
 
 		TLSHandshakeTimeout:   10 * time.Second,
 		IdleConnTimeout:       10 * time.Second,
-		ResponseHeaderTimeout: 10 * time.Second,
+		ResponseHeaderTimeout: 30 * time.Second,
 
-		MaxIdleConns:        3000,
-		MaxIdleConnsPerHost: 100,
+		//MaxIdleConns:        1,
+		//MaxIdleConnsPerHost: 1,
+		MaxConnsPerHost:   0,
+		DisableKeepAlives: true,
 	}
 	reverseProxy.ServeHTTP(w, r)
 }
