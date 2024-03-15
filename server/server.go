@@ -94,7 +94,6 @@ func (s *Server) Run(conf *config.Config) {
 	}
 
 	if err := server.ListenAndServeTLS("", ""); err != nil {
-		// error handling
 		log.Fatal().Err(err).Str("type", "server").Msg("Failed to run server")
 	}
 }
