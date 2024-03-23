@@ -14,6 +14,7 @@ require (
 )
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/google/go-github/v56 v56.0.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -23,6 +24,7 @@ require (
 )
 
 require (
+	github.com/Festivals-App/festivals-identity-server v0.7.5
 	github.com/Festivals-App/festivals-pki v0.0.4
 	github.com/Festivals-App/festivals-server-tools v0.0.3
 )

@@ -1,3 +1,7 @@
+github.com/Festivals-App/festivals-identity-server v0.7.3 h1:gNpb4RGQHLnyFG6ZdZMhAovmK5lDRjpyjwb/pJR1ZVc=
+github.com/Festivals-App/festivals-identity-server v0.7.3/go.mod h1:+Hoagsa1twsloxlr/U6t5KVt5OZyJgLNwlI9qHjMC+Y=
+github.com/Festivals-App/festivals-identity-server v0.7.5 h1:UWvoNtxbm2LoPH7HdpMRifwg/1cdxy4MQjoTVw75pa0=
+github.com/Festivals-App/festivals-identity-server v0.7.5/go.mod h1:+Hoagsa1twsloxlr/U6t5KVt5OZyJgLNwlI9qHjMC+Y=
 github.com/Festivals-App/festivals-pki v0.0.4 h1:g99v/0bJZFRC1xx3ZF21j6rKg0CBYyTxjGG5cDojO7o=
 github.com/Festivals-App/festivals-pki v0.0.4/go.mod h1:KBEm824Amuqww5pRhT76e8L+Ih8nS59vUbuincfu7RQ=
 github.com/Festivals-App/festivals-server-tools v0.0.3 h1:s1OY4fO1+3QluV5MsDmZ934Q59H7IrBrxtWT6B8CPAs=
@@ -9,6 +13,8 @@ github.com/go-chi/chi/v5 v5.0.12/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNIT
 github.com/go-chi/hostrouter v0.2.0 h1:GwC7TZz8+SlJN/tV/aeJgx4F+mI5+sp+5H1PelQUjHM=
 github.com/go-chi/hostrouter v0.2.0/go.mod h1:pJ49vWVmtsKRKZivQx0YMYv4h0aX+Gcn6V23Np9Wf1s=
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
+github.com/golang-jwt/jwt/v5 v5.2.1 h1:OuVbFODueb089Lh128TAcimifWaLhJwVflnrgM17wHk=
+github.com/golang-jwt/jwt/v5 v5.2.1/go.mod h1:pqrtFR0X4osieyHYxtmOUWsAWrfe1Q5UVIyoH402zdk=
 github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-cmp v0.5.9 h1:O2Tfq5qg4qc4AmwVlvv0oLiVAGB7enBSJ2x2DqQFi38=
 github.com/google/go-cmp v0.5.9/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
