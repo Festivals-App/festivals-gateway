@@ -20,9 +20,9 @@ import (
 
 //"github.com/rs/zerolog/log"
 
-func GoToFestivalsIdentityAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
-	goToLoadbalancedHost("festivals-identity-server", conf, w, r)
-}
+//func GoToFestivalsIdentityAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
+//	goToLoadbalancedHost("festivals-identity-server", conf, w, r)
+//}
 
 func GoToFestivalsAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 	goToLoadbalancedHost("festivals-server", conf, w, r)
@@ -97,7 +97,6 @@ func serverTLSConfig(conf *config.Config) (*tls.Config, error) {
 // Allowed load balanced service identifier
 var loadBalancedServiceIdentifier = []string{
 	"festivals-gateway",
-	"festivals-identity-server",
 	"festivals-server",
 	"festivals-fileserver",
 	"festivals-database",

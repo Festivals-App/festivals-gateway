@@ -18,8 +18,7 @@ type Config struct {
 	TLSKey             string
 	LoversEar          string
 	Interval           int
-	APIKeys            []string
-	AdminKeys          []string
+	IdentityEndpoint   string
 }
 
 func DefaultConfig() *Config {
@@ -61,16 +60,7 @@ func ParseConfig(cfgFile string) *Config {
 	loversear := content.Get("heartbeat.endpoint").(string)
 	interval := content.Get("heartbeat.interval").(int64)
 
-	keyValues := content.Get("authentication.api-keys").([]interface{})
-	keys := make([]string, len(keyValues))
-	for i, v := range keyValues {
-		keys[i] = v.(string)
-	}
-	adminKeyValues := content.Get("authentication.admin-keys").([]interface{})
-	adminKeys := make([]string, len(adminKeyValues))
-	for i, v := range adminKeyValues {
-		adminKeys[i] = v.(string)
-	}
+	identity := content.Get("authentication.endpoint").(string)
 
 	checkForDebugMode()
 
@@ -84,8 +74,7 @@ func ParseConfig(cfgFile string) *Config {
 		TLSKey:             tlskey,
 		LoversEar:          loversear,
 		Interval:           int(interval),
-		APIKeys:            keys,
-		AdminKeys:          adminKeys,
+		IdentityEndpoint:   identity,
 	}
 }
 

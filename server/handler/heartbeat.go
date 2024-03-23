@@ -7,14 +7,13 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/loadbalancer"
 	servertools "github.com/Festivals-App/festivals-server-tools"
 
 	"github.com/rs/zerolog/log"
 )
 
-func ReceivedHeartbeat(conf *config.Config, w http.ResponseWriter, r *http.Request) {
+func ReceivedHeartbeat(w http.ResponseWriter, r *http.Request) {
 
 	var beat servertools.Heartbeat
 	err := json.NewDecoder(r.Body).Decode(&beat)

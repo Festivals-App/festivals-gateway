@@ -3,11 +3,13 @@ package server
 import (
 	"crypto/tls"
 	"net/http"
+	"slices"
 	"strconv"
 	"time"
 
 	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/handler"
+	token "github.com/Festivals-App/festivals-identity-server/jwt"
 	festivalspki "github.com/Festivals-App/festivals-pki"
 	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/go-chi/chi/v5"
@@ -21,6 +23,7 @@ type Server struct {
 	Router    *chi.Mux
 	Config    *config.Config
 	TLSConfig *tls.Config
+	Validator *token.ValidationService
 }
 
 func NewServer(config *config.Config) *Server {
@@ -35,9 +38,21 @@ func (s *Server) Initialize(config *config.Config) {
 	s.Router = chi.NewRouter()
 	s.Config = config
 
+	s.setIdentityService()
 	s.setTLSHandling()
 	s.setMiddleware()
 	s.setRoutes()
+}
+
+func (s *Server) setIdentityService() {
+
+	config := s.Config
+
+	val := token.NewValidationService(config.IdentityEndpoint, config.TLSCert, config.TLSKey, config.ServiceKey, true)
+	if val == nil {
+		log.Fatal().Msg("Failed to create validator.")
+	}
+	s.Validator = val
 }
 
 func (s *Server) setTLSHandling() {
@@ -75,7 +90,6 @@ func (s *Server) setRoutes() {
 	hr.Map("api."+base, GetFestivalsAPIRouter(s))
 	hr.Map("database."+base, GetFestivalsDatabaseRouter(s))
 	hr.Map("files."+base, GetFestivalsFilesAPIRouter(s))
-	hr.Map("identity."+base, GetFestivalsIdentityAPIRouter(s))
 
 	// Mount the host router
 	s.Router.Mount("/", hr)
@@ -101,20 +115,20 @@ func (s *Server) Run(conf *config.Config) {
 func GetWebsiteNodeRouter(s *Server) chi.Router {
 
 	r := chi.NewRouter()
-	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsWebsiteNode))
+	r.Handle("/*", s.loadbalanceRequest(handler.GoToFestivalsWebsiteNode))
 	return r
 }
 
 func GetGatewayRouter(s *Server) chi.Router {
 
 	r := chi.NewRouter()
-	r.Get("/health", s.handleRequestWithoutValidation(handler.GetHealth))
-	r.Get("/version", s.handleRequestWithoutValidation(handler.GetVersion))
-	r.Get("/info", s.handleRequestWithoutValidation(handler.GetInfo))
+	r.Get("/health", s.handleRequest(handler.GetHealth))
+	r.Get("/version", s.handleRequest(handler.GetVersion))
+	r.Get("/info", s.handleRequest(handler.GetInfo))
 
-	r.Get("/log", s.handleAdminRequest(handler.GetLog))
-	r.Get("/log/trace", s.handleAdminRequest(handler.GetTraceLog))
-	r.Post("/update", s.handleAdminRequest(handler.MakeUpdate))
+	r.Get("/log", s.handleRequest(handler.GetLog))
+	r.Get("/log/trace", s.handleRequest(handler.GetTraceLog))
+	r.Post("/update", s.handleRequest(handler.MakeUpdate))
 
 	return r
 }
@@ -122,8 +136,8 @@ func GetGatewayRouter(s *Server) chi.Router {
 func GetDiscoveryRouter(s *Server) chi.Router {
 
 	r := chi.NewRouter()
-	r.Post("/loversear", s.handleAdminRequest(handler.ReceivedHeartbeat))
-	r.Get("/services", s.handleAdminRequest(handler.GetServices))
+	r.Post("/loversear", s.handleServiceRequest(handler.ReceivedHeartbeat))
+	r.Get("/services", s.handleRequest(handler.GetServices))
 
 	return r
 }
@@ -131,44 +145,69 @@ func GetDiscoveryRouter(s *Server) chi.Router {
 func GetFestivalsAPIRouter(s *Server) chi.Router {
 
 	r := chi.NewRouter()
-	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsAPI))
+	r.Handle("/*", s.loadbalanceRequest(handler.GoToFestivalsAPI))
 	return r
 }
 
 func GetFestivalsDatabaseRouter(s *Server) chi.Router {
 
 	r := chi.NewRouter()
-	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsDatabase))
+	r.Handle("/*", s.loadbalanceRequest(handler.GoToFestivalsDatabase))
 	return r
 }
 
 func GetFestivalsFilesAPIRouter(s *Server) chi.Router {
 
 	r := chi.NewRouter()
-	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsFilesAPI))
+	r.Handle("/*", s.loadbalanceRequest(handler.GoToFestivalsFilesAPI))
 	return r
 }
 
-func GetFestivalsIdentityAPIRouter(s *Server) chi.Router {
-
-	r := chi.NewRouter()
-	r.Handle("/*", s.handleRequestWithoutValidation(handler.GoToFestivalsIdentityAPI))
-	return r
-}
-
-// function prototype to inject config instance in handleRequest()
 type RequestHandlerFunction func(config *config.Config, w http.ResponseWriter, r *http.Request)
 
-func (s *Server) handleAdminRequest(requestHandler RequestHandlerFunction) http.HandlerFunc {
+func (s *Server) loadbalanceRequest(requestHandler RequestHandlerFunction) http.HandlerFunc {
 
-	return servertools.IsEntitled(s.Config.AdminKeys, func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestHandler(s.Config, w, r)
 	})
 }
 
-func (s *Server) handleRequestWithoutValidation(requestHandler RequestHandlerFunction) http.HandlerFunc {
+type JWTAuthenticatedHandlerFunction func(validator *token.ValidationService, claims *token.UserClaims, w http.ResponseWriter, r *http.Request)
+
+func (s *Server) handleRequest(requestHandler JWTAuthenticatedHandlerFunction) http.HandlerFunc {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		requestHandler(s.Config, w, r)
+
+		claims := token.GetValidClaims(r, s.Validator)
+		if claims == nil {
+			servertools.UnauthorizedResponse(w)
+			return
+		}
+		requestHandler(s.Validator, claims, w, r)
+	})
+}
+
+type ServiceKeyAuthenticatedHandlerFunction func(w http.ResponseWriter, r *http.Request)
+
+func (s *Server) handleServiceRequest(requestHandler ServiceKeyAuthenticatedHandlerFunction) http.HandlerFunc {
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		servicekey := token.GetServiceToken(r)
+		if servicekey == "" {
+			claims := token.GetValidClaims(r, s.Validator)
+			if claims != nil && claims.UserRole == token.ADMIN {
+				requestHandler(w, r)
+				return
+			}
+			servertools.UnauthorizedResponse(w)
+			return
+		}
+		allServiceKeys := s.Validator.ServiceKeys
+		if !slices.Contains(*allServiceKeys, servicekey) {
+			servertools.UnauthorizedResponse(w)
+			return
+		}
+		requestHandler(w, r)
 	})
 }

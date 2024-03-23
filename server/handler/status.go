@@ -3,22 +3,22 @@ package handler
 import (
 	"net/http"
 
-	"github.com/Festivals-App/festivals-gateway/server/config"
 	"github.com/Festivals-App/festivals-gateway/server/status"
+	token "github.com/Festivals-App/festivals-identity-server/jwt"
 	servertools "github.com/Festivals-App/festivals-server-tools"
 )
 
-func GetVersion(conf *config.Config, w http.ResponseWriter, r *http.Request) {
+func GetVersion(validator *token.ValidationService, claims *token.UserClaims, w http.ResponseWriter, r *http.Request) {
 
 	servertools.RespondString(w, http.StatusOK, status.VersionString())
 }
 
-func GetInfo(conf *config.Config, w http.ResponseWriter, r *http.Request) {
+func GetInfo(validator *token.ValidationService, claims *token.UserClaims, w http.ResponseWriter, r *http.Request) {
 
 	servertools.RespondJSON(w, http.StatusOK, status.InfoString())
 }
 
-func GetHealth(conf *config.Config, w http.ResponseWriter, r *http.Request) {
+func GetHealth(validator *token.ValidationService, claims *token.UserClaims, w http.ResponseWriter, r *http.Request) {
 
 	servertools.RespondCode(w, status.HealthStatus())
 }

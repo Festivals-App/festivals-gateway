@@ -17,5 +17,4 @@ endpoint = "localhost"
 interval = 6
 
 [authentication]
-api-keys = ["TEST_API_KEY_001", "TEST_API_KEY_002", "TEST_API_KEY_003"]
-admin-keys = ["TEST_API_KEY_001"]
+endpoint = "localhost"
