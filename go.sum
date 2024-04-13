@@ -1,5 +1,5 @@
-github.com/Festivals-App/festivals-identity-server v0.7.7 h1:iFpWYjkXzIaXSpk0RwWdaJ6NHF48FM7SQ6a8Mi9aiok=
-github.com/Festivals-App/festivals-identity-server v0.7.7/go.mod h1:/ZD9L/WyoqLeu8KR7FAyxDtCGZImBoNeCy9E24kn/fg=
+github.com/Festivals-App/festivals-identity-server v0.7.8 h1:alG+ZsP6jLBQO2eHNh/uUA0+FBkeQ4kX7uBg03HKW6c=
+github.com/Festivals-App/festivals-identity-server v0.7.8/go.mod h1:EN36UqI3m8VP7Zmlg1xZAI03I6XHolZQTZmkQ0lBTt8=
 github.com/Festivals-App/festivals-pki v0.0.4 h1:g99v/0bJZFRC1xx3ZF21j6rKg0CBYyTxjGG5cDojO7o=
 github.com/Festivals-App/festivals-pki v0.0.4/go.mod h1:KBEm824Amuqww5pRhT76e8L+Ih8nS59vUbuincfu7RQ=
 github.com/Festivals-App/festivals-server-tools v0.0.4 h1:STGIYw/KUvmzNkO18c5bEE49fBGfEycjav3s3nxRs9I=
@@ -37,8 +37,8 @@ github.com/rs/zerolog v1.32.0/go.mod h1:/7mN4D5sKwJLZQ2b/znpjC3/GQWY/xaDXUM0kKWR
 golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.12.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
-golang.org/x/sys v0.18.0 h1:DBdB3niSjOA/O0blCZBqDefyWNYveAYMNF1Wum0DYQ4=
-golang.org/x/sys v0.18.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
+golang.org/x/sys v0.19.0 h1:q5f1RH2jigJ1MoAWp2KTp3gm5zAGFUTarQZ5U386+4o=
+golang.org/x/sys v0.19.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 gopkg.in/natefinch/lumberjack.v2 v2.2.1 h1:bBRl1b0OH9s/DuPhuXpNl+VtCaJXFZ5/uEFST95x9zc=
 gopkg.in/natefinch/lumberjack.v2 v2.2.1/go.mod h1:YD8tP3GAjkrDg1eZH7EGmyESg/lsYskCTPBJVb9jqSc=
