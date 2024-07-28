@@ -9,8 +9,8 @@ key = "TEST_API_KEY_001"
 
 [tls]
 festivaslapp-root-ca = "/usr/local/festivals-gateway/ca.crt"
-cert = "//usr/local/festivals-gateway/server.crt"
-key = "/usr/local/festivals-gateway/ca.key"
+cert = "/usr/local/festivals-gateway/server.crt"
+key = "/usr/local/festivals-gateway/server.key"
 
 [heartbeat]
 endpoint = "localhost"
