@@ -39,6 +39,18 @@ TBA
 
 ## Deployment
 
+The Go binaries are able to run without system dependencies so there are not many requirements for the system to run the festivals-gateway binary.
+The config file needs to be placed at `/etc/festivals-gateway.conf` or the template config file needs to be present in the directory the binary runs in.
+
+You also need to provide certificates in the right format and location:
+
+- The default path to the root CA certificate is  `/usr/local/festivals-gateway/ca.crt`
+- The default path to the server certificate is   `/usr/local/festivals-gateway/server.crt`
+- The default path to the corresponding key is    `/usr/local/festivals-gateway/server.key`
+
+Where the root CA certificate is required to validate incoming requests and the server certificate and key is requires to make outgoing connections.
+For intructions on how to manage and create the certificates see the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.
+
 ### VM deployment
 
 The install and update scripts should work with any system that uses *systemd* and *firewalld*.
