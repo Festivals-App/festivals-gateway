@@ -49,7 +49,7 @@ You also need to provide certificates in the right format and location:
 - The default path to the corresponding key is    `/usr/local/festivals-gateway/server.key`
 
 Where the root CA certificate is required to validate incoming requests and the server certificate and key is requires to make outgoing connections.
-For intructions on how to manage and create the certificates see the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.
+For instructions on how to manage and create the certificates see the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.
 
 ### VM deployment
 
