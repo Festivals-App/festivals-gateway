@@ -13,7 +13,7 @@
 
 The service gateway for the FestivalsApp backend, providing access to the [FestivalsAPI](https://github.com/Festivals-App/festivals-server), [static file server](https://github.com/Festivals-App/festivals-fileserver), [database](https://github.com/Festivals-App/festivals-database) and the [website node](https://github.com/Festivals-App/festivals-identity-server) acting as a combined loadbalancer, ingress server and discovery service.
 
-![Figure 1: Architecture Overview Highlighted](https://github.com/Festivals-App/festivals-documentation/blob/main/images/architecture/overview_gate.png "Figure 1: Architecture Overview Highlighted")
+![Figure 1: Architecture Overview Highlighted](https://github.com/Festivals-App/festivals-documentation/blob/main/images/architecture/architecture_overview_gateway.svg "Figure 1: Architecture Overview Highlighted")
 
 <hr />
 <p align="center">
