@@ -11,7 +11,7 @@
   <br/><br/>
 </h1>
 
-The service gateway for the FestivalsApp backend, providing access to the [FestivalsAPI](https://github.com/Festivals-App/festivals-server), [static file server](https://github.com/Festivals-App/festivals-fileserver), [database](https://github.com/Festivals-App/festivals-database) and the [website node](https://github.com/Festivals-App/festivals-identity-server) acting as a combined loadbalancer, ingress server and discovery service.
+The service gateway for the FestivalsApp backend, providing access to the [FestivalsAPI](https://github.com/Festivals-App/festivals-server), [FestivalsFilesAPI](https://github.com/Festivals-App/festivals-fileserver), [database](https://github.com/Festivals-App/festivals-database) and the [website node](https://github.com/Festivals-App/festivals-identity-server) acting as a ingress server, loadbalancer and discovery service.
 
 ![Figure 1: Architecture Overview Highlighted](https://github.com/Festivals-App/festivals-documentation/blob/main/images/architecture/architecture_overview_gateway.svg "Figure 1: Architecture Overview Highlighted")
 
@@ -19,10 +19,7 @@ The service gateway for the FestivalsApp backend, providing access to the [Festi
 <p align="center">
   <a href="#development">Development</a> •
   <a href="#deployment">Deployment</a> •
-  <a href="#usage">Usage</a> •
-  <a href="#documentation">Documentation</a> •
-  <a href="#engage">Engage</a> •
-  <a href="#licensing">Licensing</a>
+  <a href="#engage">Engage</a>
 </p>
 <hr />
 
@@ -30,13 +27,14 @@ The service gateway for the FestivalsApp backend, providing access to the [Festi
 
 TBA
 
+To find out more about the architecture and technical information see the [ARCHITECTURE](./ARCHITECTURE.md) document. The general documentation for the Festivals App is in the [festivals-documentation](https://github.com/festivals-app/festivals-documentation) repository. The documentation repository contains architecture information, general deployment documentation, templates and other helpful documents.
+
 ### Requirements
 
-TBA
-
-### Setup
-
-TBA
+- [Golang](https://go.dev/) Version 1.23.5+
+- [Visual Studio Code](https://code.visualstudio.com/download) 1.96.0+
+  - Plugin recommendations are managed via [workspace recommendations](https://code.visualstudio.com/docs/editor/extension-marketplace#_recommended-extensions).
+- [Bash script](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) friendly environment
 
 ## Deployment
 
@@ -54,7 +52,7 @@ For instructions on how to manage and create the certificates see the [festivals
 
 ### VM deployment
 
-The install and update scripts should work with any system that uses *systemd* and *firewalld*.
+The install and update scripts should work with any system that uses *systemd* and *ufw*.
 
 Installing
 ```bash
@@ -69,9 +67,13 @@ chmod +x update.sh
 sudo ./update.sh
 ```
 
-### Server
+#### Build and run using make
 
-All of the scripts require Ubuntu 20 LTS as the operating system and that the server has already been initialised, see the steps to do that [here](https://github.com/Festivals-App/festivals-documentation/tree/master/deployment/general-vm-setup).
+```bash
+make build
+make run
+# Default API Endpoint : http://localhost:10439
+```
 
 ## Usage
 
@@ -88,7 +90,6 @@ discovery.base/loversear
 api.base/*
 
 files.base/*
-
 
 ### Documentation
 
@@ -110,10 +111,4 @@ The following channels are available for discussions, feedback, and support requ
 
 ## Licensing
 
-Copyright (c) 2020-2023 Simon Gaus.
-
-Licensed under the **GNU Lesser General Public License v3.0** (the "License"); you may not use this file except in compliance with the License.
-
-You may obtain a copy of the License at https://www.gnu.org/licenses/lgpl-3.0.html.
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the [LICENSE](./LICENSE) for the specific language governing permissions and limitations under the License.
+Copyright (c) 2020-2025 Simon Gaus. Licensed under the [**GNU Lesser General Public License v3.0**](./LICENSE)
