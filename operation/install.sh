@@ -4,7 +4,7 @@
 #
 # Enables the firewall, installs the newest festivals-gateway and starts it as a service.
 #
-# (c)2020-2022 Simon Gaus
+# (c)2020-2025 Simon Gaus
 #
 
 # Test for web server user
@@ -90,8 +90,9 @@ fi
 #
 if command -v ufw > /dev/null; then
 
-  ufw allow 8080/tcp >/dev/null
-  echo "Added festivals-gateway to ufw using port 8080."
+  mv ufw_app_profile /etc/ufw/applications.d/festivals-gateway
+  ufw allow festivals-gateway >/dev/null
+  echo "Added festivals-gateway to ufw using port 443."
   sleep 1
 
 elif ! [ "$(uname -s)" = "Darwin" ]; then

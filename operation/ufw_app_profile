@@ -1,0 +1,4 @@
+[festivals-gateway]
+title=festivals-gateway
+description=Providing access to the FestivalsAPI, FestivalsFilesAPI, database and the website node acting as an ingress server, loadbalancer and discovery service.
+ports=443/tcp
