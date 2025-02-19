@@ -39,29 +39,30 @@ To find out more about the architecture and technical information see the [ARCHI
 ## Deployment
 
 The Go binaries are able to run without system dependencies so there are not many requirements for the system to run the festivals-gateway binary.
-The config file needs to be placed at `/etc/festivals-gateway.conf` or the template config file needs to be present in the directory the binary runs in.
+
+  > The config file is placed at `/etc/festivals-gateway.conf`.
 
 You also need to provide certificates in the right format and location:
 
-- The default path to the root CA certificate is  `/usr/local/festivals-gateway/ca.crt`
-- The default path to the server certificate is   `/usr/local/festivals-gateway/server.crt`
-- The default path to the corresponding key is    `/usr/local/festivals-gateway/server.key`
+  > Root CA certificate     `/usr/local/festivals-gateway/ca.crt`
+  > Server certificate is   `/usr/local/festivals-gateway/server.crt`
+  > Server key is           `/usr/local/festivals-gateway/server.key`
 
 Where the root CA certificate is required to validate incoming requests and the server certificate and key is requires to make outgoing connections.
 For instructions on how to manage and create the certificates see the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.
 
-### VM deployment
+### VM
 
 The install and update scripts should work with any system that uses *systemd* and *ufw*.
+Additionally the scripts will somewhat work under macOS but won't configure the firewall or launch service.
 
-Installing
 ```bash
+# Installing
 curl -o install.sh https://raw.githubusercontent.com/Festivals-App/festivals-gateway/main/operation/install.sh
 chmod +x install.sh
 sudo ./install.sh
-```
-Updating
-```bash
+
+# Updating
 curl -o update.sh https://raw.githubusercontent.com/Festivals-App/festivals-gateway/main/operation/update.sh
 chmod +x update.sh
 sudo ./update.sh
@@ -107,7 +108,7 @@ The following channels are available for discussions, feedback, and support requ
 | Type                     | Channel                                                |
 | ------------------------ | ------------------------------------------------------ |
 | **General Discussion**   | <a href="https://github.com/festivals-app/festivals-documentation/issues/new/choose" title="General Discussion"><img src="https://img.shields.io/github/issues/festivals-app/festivals-documentation/question.svg?style=flat-square"></a> </a>   |
-| **Other Requests**    | <a href="mailto:simon.cay.gaus@gmail.com" title="Email me"><img src="https://img.shields.io/badge/email-Simon-green?logo=mail.ru&style=flat-square&logoColor=white"></a>   |
+| **Other Requests**    | <a href="mailto:simon@festivalsapp.org" title="Email me"><img src="https://img.shields.io/badge/email-Simon-green?logo=mail.ru&style=flat-square&logoColor=white"></a>   |
 
 ## Licensing
 
