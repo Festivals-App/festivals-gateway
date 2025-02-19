@@ -71,7 +71,7 @@ curl --progress-bar -L "$file_url" -o festivals-gateway.tar.gz
 echo -e "\n📦  Extracting binary..."
 tar -xf festivals-gateway.tar.gz
 
-mv festivals-fileserver /usr/local/bin/festivals-gateway || {
+mv festivals-gateway /usr/local/bin/festivals-gateway || {
     echo -e "\n🚨  ERROR: Failed to install FestivalsApp Gateway binary. Exiting.\n"
     exit 1
 }
