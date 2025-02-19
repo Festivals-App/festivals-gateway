@@ -1,12 +1,13 @@
-github.com/Festivals-App/festivals-identity-server v0.7.9 h1:1NpGcSsUhXjpaMN83Wp+X7UHRrur+3YdblX97sRXz90=
-github.com/Festivals-App/festivals-identity-server v0.7.9/go.mod h1:Gcg91W+T94+/1EQr0+vm6lzVuSviS861dELsrUs2Q+Q=
+github.com/Festivals-App/festivals-identity-server v0.7.10 h1:GY7jZU2YPoadhybE0O7YEuJM+NPkMNZRMVRVttF0pTM=
+github.com/Festivals-App/festivals-identity-server v0.7.10/go.mod h1:+LnIcSnk+BoAgJoZSDB/AkBgwDjkgqQfBpv7tPEjiBc=
 github.com/Festivals-App/festivals-pki v0.0.4 h1:g99v/0bJZFRC1xx3ZF21j6rKg0CBYyTxjGG5cDojO7o=
 github.com/Festivals-App/festivals-pki v0.0.4/go.mod h1:KBEm824Amuqww5pRhT76e8L+Ih8nS59vUbuincfu7RQ=
 github.com/Festivals-App/festivals-server-tools v0.0.5 h1:M5cPgCyVTzhHYCEt4uTeZ1LdXiJlZBhzD5NwWgQQUk4=
 github.com/Festivals-App/festivals-server-tools v0.0.5/go.mod h1:yO4DkfaZFfikxV9cYYENav9qVvBqehw+RK3a5kle2h0=
 github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
-github.com/go-chi/chi/v5 v5.2.0 h1:Aj1EtB0qR2Rdo2dG4O94RIU35w2lvQSj6BRA4+qwFL0=
 github.com/go-chi/chi/v5 v5.2.0/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
+github.com/go-chi/chi/v5 v5.2.1 h1:KOIHODQj58PmL80G2Eak4WdvUzjSJSm0vG72crDCqb8=
+github.com/go-chi/chi/v5 v5.2.1/go.mod h1:L2yAIGWB3H+phAw1NxKwWM+7eUH/lU8pOMm5hHcoops=
 github.com/go-chi/hostrouter v0.3.0 h1:75it1eO3FvkG8te1CvU6Kvr3WzAZNEBbo8xIrxUKLOQ=
 github.com/go-chi/hostrouter v0.3.0/go.mod h1:KLB+7PH/ceOr6FCmMyWD2Dmql/clpOe+y7I7CUeTkaQ=
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
@@ -37,8 +38,8 @@ github.com/rs/zerolog v1.33.0/go.mod h1:/7mN4D5sKwJLZQ2b/znpjC3/GQWY/xaDXUM0kKWR
 golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.12.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
-golang.org/x/sys v0.29.0 h1:TPYlXGxvx1MGTn2GiZDhnjPA9wZzZeGKHHmKhHYvgaU=
-golang.org/x/sys v0.29.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
+golang.org/x/sys v0.30.0 h1:QjkSwP/36a20jFYWkSue1YwXzLmsV5Gfq7Eiy72C1uc=
+golang.org/x/sys v0.30.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 gopkg.in/natefinch/lumberjack.v2 v2.2.1 h1:bBRl1b0OH9s/DuPhuXpNl+VtCaJXFZ5/uEFST95x9zc=
 gopkg.in/natefinch/lumberjack.v2 v2.2.1/go.mod h1:YD8tP3GAjkrDg1eZH7EGmyESg/lsYskCTPBJVb9jqSc=
