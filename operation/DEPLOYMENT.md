@@ -134,5 +134,5 @@ This should return a JWT Token `<Header.<Payload>.<Signatur>`
 Use this to make authorized calls to the Gateway:
 
 ```bash
-curl -H "Api-Key: TEST_API_KEY_001" -H "Authorization: <JWT>" --cert /opt/homebrew/etc/pki/issued/api-client.crt --key /opt/homebrew/etc/pki/private/api-client.key --cacert /opt/homebrew/etc/pki/ca.crt https://gateway.festivalsapp.home/info
+curl -H "Api-Key: TEST_API_KEY_001" -H "Authorization: Bearer <JWT>" --cert /opt/homebrew/etc/pki/issued/api-client.crt --key /opt/homebrew/etc/pki/private/api-client.key --cacert /opt/homebrew/etc/pki/ca.crt https://gateway.festivalsapp.home/info
 ```
