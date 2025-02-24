@@ -41,14 +41,6 @@ To find out more about the architecture and technical information see the [ARCHI
 The Go binaries are able to run without system dependencies so there are not many requirements for the system to run the festivals-gateway binary,
 just follow the [**deployment guide**](./operation/DEPLOYMENT.md).
 
-#### Build and run using make
-
-```bash
-make build
-make run
-# Default API Endpoint : http://localhost:10439
-```
-
 ## Usage
 
 TBA

@@ -21,8 +21,9 @@
 
 ### Authentication & Authorization
 
-To access the gateway you need to either provide a service key via a custom header or a JWT with your requests authorization header, requests to the loadbalanced services don't need any means of authentication: 
-```
+To access the gateway you need to either provide a service key via a custom header or a JWT with your requests authorization header, requests to the loadbalanced services don't need any means of authentication:
+
+```ini
 Service-Key:<service-key>
 Authorization: Bearer <jwt>
 ```
@@ -30,6 +31,7 @@ Authorization: Bearer <jwt>
 ## Overview
 
 [Gateway-Route](#gateway-route)
+
 * GET              `/info`
 * GET              `/version`
 * POST             `/update`
@@ -38,28 +40,34 @@ Authorization: Bearer <jwt>
 * GET              `/log/trace`
 
 [Discovery-Route](#discovery-route)
+
 * POST            `/loversear`
 * GET             `/services`
 
 [FestivalsAPI-Route](#festivalsapi-route)
+
 * GET, POST, PATCH, DELETE      `/*`
 
 [Database-Route](#database-route)
+
 * GET, POST, PATCH, DELETE      `/*`
 
 [FestivalsFilesAPI-Route](#festivalsfilesapi-route)
+
 * GET, POST, PATCH, DELETE      `/*`
 
 ------------------------------------------------------------------------------------
+
 ## Gateway-Route
 
-The gateway route listens on requests to 'https://gateway.hostname'.
+The gateway route listens on requests to `https://gateway.hostname` (for Example: <https://gateway.festivalsapp.home>).
 
 ## Server Status
-Determine the state of the server.
 
+Determine the state of the server.
 Info object
-```
+
+```json
 {
     "BuildTime":      string,
     "GitRef":         string,
@@ -70,25 +78,25 @@ Info object
 ------------------------------------------------------------------------------------
 #### GET `/info`
 
- * Authorization: JWT
+* Authorization: JWT
 
- * Example:  
+* Example:  
   `GET https://gateway.festivalsapp.dev/info`
 
- * Returns
-      * Returns the info object 
+* Returns:
+      * Returns the info object
       * Codes `200`/`40x`/`50x`
       * `data` or `error` field
 
 ------------------------------------------------------------------------------------
 #### GET `/version`
 
- * Authorization: JWT
+* Authorization: JWT
 
- * Example:  
+* Example:  
   `GET https://gateway.festivalsapp.dev/version`
  
- * Returns
+* Returns:
       * The version of the server application.
       * Codes `200`/`40x`/`50x`
       * server version as a string `text/plain`
