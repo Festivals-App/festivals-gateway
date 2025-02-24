@@ -1,6 +1,6 @@
 # Development Deployment
 
-This deployment guide explains how to deploy the FestivalsApp Identity Server using certificates intended for development purposes.
+This deployment guide explains how to deploy the FestivalsApp Gateway using certificates intended for development purposes.
 
 ## Prerequisites
 
