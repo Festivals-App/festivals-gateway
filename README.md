@@ -61,7 +61,7 @@ files.base/*
 
 The gateway is documented in detail [here](./DOCUMENTATION.md).
 
-The full documentation for the Festivals App is in the [festivals-documentation](https://github.com/festivals-app/festivals-documentation) repository. 
+The full documentation for the Festivals App is in the [festivals-documentation](https://github.com/festivals-app/festivals-documentation) repository.
 The documentation repository contains technical documents, architecture information, UI/UX specifications, and whitepapers related to this implementation.
 
 ## Engage
