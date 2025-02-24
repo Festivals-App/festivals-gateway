@@ -17,7 +17,7 @@ I use the development wildcard server certificate (`CN=*festivalsapp.home`) for 
 
   > **DON'T USE THIS IN PRODUCTION, SEE [festivals-pki](https://github.com/Festivals-App/festivals-pki) FOR SECURITY BEST PRACTICES FOR PRODUCTION**
 
-## Installing the FestivalsApp Gateway
+## 1. Installing the FestivalsApp Gateway
 
 Run the following commands to download and install the FestivalsApp Gateway:
 
@@ -27,7 +27,20 @@ chmod +x install.sh
 sudo ./install.sh
 ```
 
-## Copying mTLS Certificates to the VM
+The config file is located at:
+
+  > `/etc/festivals-gateway.conf`.
+
+You also need to provide certificates in the right format and location:
+
+  > Root CA certificate     `/usr/local/festivals-gateway/ca.crt`
+  > Server certificate is   `/usr/local/festivals-gateway/server.crt`
+  > Server key is           `/usr/local/festivals-gateway/server.key`
+
+Where the root CA certificate is required to validate incoming requests and the server certificate and key is requires to make outgoing connections.
+For instructions on how to manage and create the certificates see the [festivals-pki](https://github.com/Festivals-App/festivals-pki) repository.
+
+## 2. Copying mTLS Certificates to the VM
 
 Copy the server mTLS certificates from your development machine to the VM:
 
@@ -52,14 +65,13 @@ Set the correct permissions:
 sudo chown www-data /usr/local/festivals-gateway/ca.crt
 sudo chown www-data /usr/local/festivals-gateway/server.crt
 sudo chown www-data /usr/local/festivals-gateway/server.key
-
 # Set secure permissions
 sudo chmod 640 /usr/local/festivals-gateway/ca.crt
 sudo chmod 640 /usr/local/festivals-gateway/server.crt
 sudo chmod 600 /usr/local/festivals-gateway/server.key
 ```
 
-## Configuring Root CA
+## 3. Configuring the Root CA
 
 Lets add the Festivals Development Root CA certificate to the system CA's.
 
@@ -68,7 +80,7 @@ sudo cp /usr/local/festivals-gateway/ca.crt /usr/local/share/ca-certificates/fes
 sudo update-ca-certificates
 ```
 
-## Configuring the Festivals Gateway
+## 4. Configuring the Festivals Gateway
 
 Open the configuration file:
 
@@ -76,14 +88,12 @@ Open the configuration file:
 sudo nano /etc/festivals-gateway.conf
 ```
 
-Set the IP address and hostname:
+Set the server name, heartbeat endpoint and authentication endpoint:
 
 ```ini
 [service]
-bind-address = "<ip address>"
-bin-host = "<servername>"
-# For example: 
-# bind-address = "192.168.8.186"
+bin-host = "<server name>"
+# For example:
 # bind-address = "festivalsapp.home"
 
 [heartbeat]
@@ -95,27 +105,42 @@ endpoint = "<authentication endpoint>"
 # endpoint = "https://identity-0.festivalsapp.home:22580"
 ```
 
-## Setting Up DNS Resolution
+And now let's start the service:
 
-For the services in the FestivalsApp backend to work correctly, proper DNS resolution is required. If you don’t have a DNS server, manually add the necessary entries to `/etc/hosts`:
+```bash
+sudo systemctl start festivals-gateway
+```
+
+## **🚀 The gateway should now be running successfully. 🚀**
+
+### Optional: Setting Up DNS Resolution  
+
+For the services in the FestivalsApp backend to function correctly, proper DNS resolution is required.
+This is because mTLS is configured to validate the client’s certificate identity based on its DNS hostname.  
+
+If you don’t have a DNS server to manage DNS for your development VMs, you can manually configure DNS resolution
+by adding the necessary entries to each server’s `/etc/hosts` file:  
 
 ```bash
 sudo nano /etc/hosts
 ```
 
-Add the following entries:
+Add the following entries:  
 
 ```ini
 <ip address> <server name>
+<identity ip address> <heartbeat endpoint name>
 <identity ip address> <auth endpoint name>
+...
 
-# For example: 
+# Example:  
 # 192.168.8.186 festivalsapp.home
 # 192.168.8.186 discovery.festivalsapp.home
 # 192.168.8.185 identity-0.festivalsapp.home
+# ...
 ```
 
-## **🚀 The gateway should now be running successfully. 🚀**
+**Keep in mind that you will need to update each machine’s `hosts` file whenever you add a new VM or if any IP addresses change.**
 
 ## Testing
 
