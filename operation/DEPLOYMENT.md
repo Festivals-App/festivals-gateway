@@ -80,7 +80,7 @@ sudo cp /usr/local/festivals-gateway/ca.crt /usr/local/share/ca-certificates/fes
 sudo update-ca-certificates
 ```
 
-## 4. Configuring the Festivals Gateway
+## 4. Configuring the FestivalsApp Gateway
 
 Open the configuration file:
 
