@@ -105,7 +105,7 @@ sleep 1
 # 🔥 Enable and Configure Firewall
 # ─────────────────────────────────────────────────────────────────────────────
 if command -v ufw > /dev/null; then
-    echo -e "\n🚀  Configuring UFW firewall..."
+    echo -e "\n🔥  Configuring UFW firewall..."
     mv ufw_app_profile /etc/ufw/applications.d/festivals-gateway
     ufw allow festivals-gateway >/dev/null
     echo -e "✅  Added festivals-gateway to UFW with port 443."
