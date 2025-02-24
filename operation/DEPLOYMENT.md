@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-This guide assumes you have already created a Virtual Machine (VM) by following the [VM deployment guide](https://github.com/Festivals-App/festivals-documentation/tree/main/deployment/vm-deployment).
+This guide assumes you have already created a Virtual Machine (VM) following the [VM deployment guide](https://github.com/Festivals-App/festivals-documentation/tree/main/deployment/vm-deployment).
 
 Before starting the installation, ensure you have:
 
