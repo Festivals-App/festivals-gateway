@@ -9,16 +9,15 @@ import (
 )
 
 type Config struct {
-	ServiceBindAddress string
-	ServiceBindHost    string
-	ServicePort        int
-	ServiceKey         string
-	TLSRootCert        string
-	TLSCert            string
-	TLSKey             string
-	LoversEar          string
-	Interval           int
-	IdentityEndpoint   string
+	ServiceBindHost  string
+	ServicePort      int
+	ServiceKey       string
+	TLSRootCert      string
+	TLSCert          string
+	TLSKey           string
+	LoversEar        string
+	Interval         int
+	IdentityEndpoint string
 }
 
 func DefaultConfig() *Config {
@@ -48,7 +47,6 @@ func ParseConfig(cfgFile string) *Config {
 		log.Fatal().Msg("server initialize: could not read config file at '" + cfgFile + "'. Error: " + err.Error())
 	}
 
-	serviceBindAdress := content.Get("service.bind-address").(string)
 	serviceBindHost := content.Get("service.bind-host").(string)
 	servicePort := content.Get("service.port").(int64)
 	serviceKey := content.Get("service.key").(string)
@@ -65,16 +63,15 @@ func ParseConfig(cfgFile string) *Config {
 	checkForDebugMode()
 
 	return &Config{
-		ServiceBindAddress: serviceBindAdress,
-		ServiceBindHost:    serviceBindHost,
-		ServicePort:        int(servicePort),
-		ServiceKey:         serviceKey,
-		TLSRootCert:        tlsrootcert,
-		TLSCert:            tlscert,
-		TLSKey:             tlskey,
-		LoversEar:          loversear,
-		Interval:           int(interval),
-		IdentityEndpoint:   identity,
+		ServiceBindHost:  serviceBindHost,
+		ServicePort:      int(servicePort),
+		ServiceKey:       serviceKey,
+		TLSRootCert:      tlsrootcert,
+		TLSCert:          tlscert,
+		TLSKey:           tlskey,
+		LoversEar:        loversear,
+		Interval:         int(interval),
+		IdentityEndpoint: identity,
 	}
 }
 
