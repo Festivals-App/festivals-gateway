@@ -1,8 +1,6 @@
 package config
 
 import (
-	"os"
-
 	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/rs/zerolog/log"
 
@@ -19,26 +17,8 @@ type Config struct {
 	LoversEar        string
 	Interval         int
 	IdentityEndpoint string
-}
-
-func DefaultConfig() *Config {
-
-	// first we try to parse the config at the global configuration path
-	if servertools.FileExists("/etc/festivals-gateway.conf") {
-		config := ParseConfig("/etc/festivals-gateway.conf")
-		if config != nil {
-			return config
-		}
-	}
-
-	// if there is no global configuration check the current folder for the template config file
-	// this is mostly so the application will run in development environment
-	path, err := os.Getwd()
-	if err != nil {
-		log.Fatal().Msg("server initialize: could not read default config file.")
-	}
-	path = path + "/config_template.toml"
-	return ParseConfig(path)
+	InfoLog          string
+	TraceLog         string
 }
 
 func ParseConfig(cfgFile string) *Config {
@@ -61,7 +41,14 @@ func ParseConfig(cfgFile string) *Config {
 
 	identity := content.Get("authentication.endpoint").(string)
 
-	checkForDebugMode()
+	infoLogPath := content.Get("log.info").(string)
+	traceLogPath := content.Get("log.trace").(string)
+
+	tlsrootcert = servertools.ExpandTilde(tlsrootcert)
+	tlscert = servertools.ExpandTilde(tlscert)
+	tlskey = servertools.ExpandTilde(tlskey)
+	infoLogPath = servertools.ExpandTilde(infoLogPath)
+	traceLogPath = servertools.ExpandTilde(traceLogPath)
 
 	return &Config{
 		ServiceBindHost:  serviceBindHost,
@@ -73,26 +60,7 @@ func ParseConfig(cfgFile string) *Config {
 		LoversEar:        loversear,
 		Interval:         int(interval),
 		IdentityEndpoint: identity,
+		InfoLog:          infoLogPath,
+		TraceLog:         traceLogPath,
 	}
-}
-
-func checkForDebugMode() {
-
-	if len(os.Args) == 2 {
-		if os.Args[1] == "--debug" {
-
-			os.Setenv("DEBUG", "true")
-			log.Info().Msg("Running in debug mode")
-		}
-	}
-}
-
-func IsRunningInDebug() bool {
-	_, isPresent := os.LookupEnv("DEBUG")
-	return isPresent
-}
-
-func IsRunningInProduction() bool {
-	_, isPresent := os.LookupEnv("DEBUG")
-	return !isPresent
 }
