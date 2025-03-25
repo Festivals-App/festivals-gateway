@@ -17,3 +17,7 @@ interval = 6
 
 [authentication]
 endpoint = "localhost"
+
+[log]
+info = "/var/log/festivals-gateway/info.log"
+trace = "/var/log/festivals-gateway/trace.log"
