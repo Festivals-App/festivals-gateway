@@ -71,7 +71,7 @@ func (s *Server) setMiddleware() {
 	// tell the ruter which middleware to use
 	s.Router.Use(
 		// used to log the request
-		servertools.Middleware(servertools.TraceLogger("/var/log/festivals-gateway/trace.log")),
+		servertools.Middleware(servertools.TraceLogger(s.Config.TraceLog)),
 		// tries to recover after panics
 		middleware.Recoverer,
 	)
@@ -81,8 +81,8 @@ func (s *Server) setMiddleware() {
 func (s *Server) setRoutes() {
 
 	hr := hostrouter.New()
-	base := s.Config.ServiceBindHost + ":" + strconv.Itoa(s.Config.ServicePort)
 
+	base := s.Config.ServiceBindHost + ":" + strconv.Itoa(s.Config.ServicePort)
 	if s.Config.ServicePort == 80 || s.Config.ServicePort == 443 {
 		base = s.Config.ServiceBindHost
 	}

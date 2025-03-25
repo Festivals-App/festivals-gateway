@@ -11,11 +11,16 @@ import (
 
 func main() {
 
-	servertools.InitializeGlobalLogger("/var/log/festivals-gateway/info.log", true)
 	log.Info().Msg("Server startup.")
 
-	conf := config.DefaultConfig()
-	log.Info().Msg("Server configuration was initialized.")
+	root := servertools.ContainerPathArgument()
+	configFilePath := root + "/etc/festivals-gateway.conf"
+
+	conf := config.ParseConfig(configFilePath)
+	log.Info().Msg("Server configuration was initialized")
+
+	servertools.InitializeGlobalLogger(conf.InfoLog, true)
+	log.Info().Msg("Logger initialized")
 
 	server := server.NewServer(conf)
 	go server.Run(conf)
