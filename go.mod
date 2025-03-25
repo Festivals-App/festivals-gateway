@@ -26,5 +26,5 @@ require (
 require (
 	github.com/Festivals-App/festivals-identity-server v0.7.11
 	github.com/Festivals-App/festivals-pki v0.0.4
-	github.com/Festivals-App/festivals-server-tools v0.0.6
+	github.com/Festivals-App/festivals-server-tools v0.0.7
 )
