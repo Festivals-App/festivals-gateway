@@ -1,0 +1,23 @@
+# festivals-gateway configuration file v1.0
+# TOML 1.0.0-rc.2+
+
+[service]
+bind-host = "festivalsapp.dev"
+port = 8443
+key = "TEST_SERVICE_KEY_001"
+
+[tls]
+festivaslapp-root-ca = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-gateway/ca.crt"
+cert = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-gateway/server.crt"
+key = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-gateway/server.key"
+
+[heartbeat]
+endpoint = "https://discovery.festivalsapp.dev:8443/loversear"
+interval = 30
+
+[authentication]
+endpoint = "https://identity.festivalsapp.dev:22580"
+
+[log]
+info = "~/Library/Containers/org.festivalsapp.project/var/log/festivals-gateway/info.log"
+trace = "~/Library/Containers/org.festivalsapp.project/var/log/festivals-gateway/trace.log"
