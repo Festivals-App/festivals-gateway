@@ -22,25 +22,11 @@ install:
 	chmod +x $(DEV_PATH_MAC)/usr/local/bin/festivals-gateway
 	cp operation/local/config_template_dev.toml $(DEV_PATH_MAC)/etc/festivals-gateway.conf
 
-update:
-	systemctl stop festivals-gateway
-	cp festivals-gateway /usr/local/bin/festivals-gateway
-	systemctl start festivals-gateway
-
-uninstall:
-	systemctl stop festivals-gateway
-	rm /usr/local/bin/festivals-gateway
-	rm /etc/festivals-gateway.conf
-	rm /etc/systemd/system/festivals-gateway.service
-
 run:
 	./festivals-gateway --container="$(DEV_PATH_MAC)"
 
 test:
 	go test ./server/loadbalancer
-
-stop:
-	killall festivals-gateway
 
 clean:
 	rm -r festivals-gateway
