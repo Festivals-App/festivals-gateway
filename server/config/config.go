@@ -32,7 +32,7 @@ func ParseConfig(cfgFile string) *Config {
 	servicePort := content.Get("service.port").(int64)
 	serviceKey := content.Get("service.key").(string)
 
-	tlsrootcert := content.Get("tls.festivaslapp-root-ca").(string)
+	tlsrootcert := content.Get("tls.festivalsapp-root-ca").(string)
 	tlscert := content.Get("tls.cert").(string)
 	tlskey := content.Get("tls.key").(string)
 
