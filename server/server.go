@@ -57,12 +57,9 @@ func (s *Server) setIdentityService() {
 
 func (s *Server) setTLSHandling() {
 
-	tlsConfig := &tls.Config{
-		ClientAuth:               tls.RequireAndVerifyClientCert,
-		GetCertificate:           festivalspki.LoadServerCertificateHandler(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert),
-		MinVersion:               tls.VersionTLS13,
-		PreferServerCipherSuites: true,
-		SessionTicketsDisabled:   true,
+	tlsConfig, err := festivalspki.NewServerTLSConfig(s.Config.TLSCert, s.Config.TLSKey, s.Config.TLSRootCert)
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to set TLS handling")
 	}
 	s.TLSConfig = tlsConfig
 }
