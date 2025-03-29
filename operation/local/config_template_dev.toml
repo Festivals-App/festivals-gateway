@@ -7,7 +7,7 @@ port = 8443
 key = "TEST_SERVICE_KEY_001"
 
 [tls]
-festivaslapp-root-ca = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-gateway/ca.crt"
+festivalsapp-root-ca = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-gateway/ca.crt"
 cert = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-gateway/server.crt"
 key = "~/Library/Containers/org.festivalsapp.project/usr/local/festivals-gateway/server.key"
 
