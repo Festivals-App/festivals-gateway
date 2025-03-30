@@ -28,5 +28,11 @@ run:
 test:
 	go test ./server/loadbalancer
 
+run-env:
+	$(DEV_PATH_MAC)/usr/local/bin/festivals-identity-server --container="$(DEV_PATH_MAC)" &
+
+stop-env:
+	killall festivals-identity-server
+
 clean:
-	rm -r festivals-gateway
+	rm -r festivals-identity-server
