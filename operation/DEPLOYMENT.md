@@ -71,16 +71,7 @@ sudo chmod 640 /usr/local/festivals-gateway/server.crt
 sudo chmod 600 /usr/local/festivals-gateway/server.key
 ```
 
-## 3. Configuring the Root CA
-
-Lets add the Festivals Development Root CA certificate to the system CA's.
-
-```bash
-sudo cp /usr/local/festivals-gateway/ca.crt /usr/local/share/ca-certificates/festivals-dev-ca.crt
-sudo update-ca-certificates
-```
-
-## 4. Configuring the FestivalsApp Gateway
+## 3. Configuring the FestivalsApp Gateway
 
 Open the configuration file:
 
