@@ -83,7 +83,6 @@ func (s *Server) setRoutes() {
 		base = s.Config.ServiceBindHost
 	}
 
-	hr.Map("website."+base, GetWebsiteNodeRouter(s))
 	hr.Map("gateway."+base, GetGatewayRouter(s))
 	hr.Map("discovery."+base, GetDiscoveryRouter(s))
 	hr.Map("api."+base, GetFestivalsAPIRouter(s))
@@ -109,13 +108,6 @@ func (s *Server) Run(conf *config.Config) {
 	if err := server.ListenAndServeTLS("", ""); err != nil {
 		log.Fatal().Err(err).Str("type", "server").Msg("failed to run server")
 	}
-}
-
-func GetWebsiteNodeRouter(s *Server) chi.Router {
-
-	r := chi.NewRouter()
-	r.Handle("/*", s.loadbalanceRequest(handler.GoToFestivalsWebsiteNode))
-	return r
 }
 
 func GetGatewayRouter(s *Server) chi.Router {

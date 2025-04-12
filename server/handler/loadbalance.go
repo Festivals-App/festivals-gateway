@@ -36,10 +36,6 @@ func GoToFestivalsFilesAPI(conf *config.Config, w http.ResponseWriter, r *http.R
 	goToLoadbalancedHost("festivals-fileserver", conf, w, r)
 }
 
-func GoToFestivalsWebsiteNode(conf *config.Config, w http.ResponseWriter, r *http.Request) {
-	goToLoadbalancedHost("festivals-website-node", conf, w, r)
-}
-
 func goToLoadbalancedHost(service string, conf *config.Config, w http.ResponseWriter, r *http.Request) {
 
 	host, err := loadbalancedHost(service)
