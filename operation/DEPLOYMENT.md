@@ -96,6 +96,10 @@ endpoint = "<authentication endpoint>"
 # endpoint = "https://identity-0.festivalsapp.home:22580"
 ```
 
+## 4. Workaround for the FestivalsApp Gateway / Website Conflict
+
+Because the website should be accessible via the base domain (eg. `(www.)festivalsapp.home`) and thats on another VM with another IP address, the gateway server can't mount a router at `festivalsapp.home` even if it is only in order to listen to requests to the subdomains. The gateway server will try to listen to the IP address of the website `festivalsapp.home` and will recognize that it can't because it has another IP address (the one `gateway.festivalsapp.home` points to). But there is an easy solution just add `127.0.0.1 festivalsapp.home` to the gateways `hosts` file.
+
 And now let's start the service:
 
 ```bash
@@ -125,8 +129,10 @@ Add the following entries:
 ...
 
 # Example:  
-# 192.168.8.186 festivalsapp.home
-# 192.168.8.186 discovery.festivalsapp.home
+# 127.0.0.1 festivalsapp.home
+#
+# 127.0.0.1 gateway.festivalsapp.home
+# 127.0.0.1 discovery.festivalsapp.home
 # 192.168.8.185 identity-0.festivalsapp.home
 # ...
 ```
