@@ -14,7 +14,6 @@ import (
 	servertools "github.com/Festivals-App/festivals-server-tools"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/hostrouter"
 	"github.com/rs/zerolog/log"
 )
 
@@ -76,21 +75,39 @@ func (s *Server) setMiddleware() {
 // setRouters sets the all required routers
 func (s *Server) setRoutes() {
 
-	hr := hostrouter.New()
-
 	base := s.Config.ServiceBindHost + ":" + strconv.Itoa(s.Config.ServicePort)
 	if s.Config.ServicePort == 80 || s.Config.ServicePort == 443 {
 		base = s.Config.ServiceBindHost
 	}
 
-	hr.Map("gateway."+base, GetGatewayRouter(s))
-	hr.Map("discovery."+base, GetDiscoveryRouter(s))
-	hr.Map("api."+base, GetFestivalsAPIRouter(s))
-	hr.Map("database."+base, GetFestivalsDatabaseRouter(s))
-	hr.Map("files."+base, GetFestivalsFilesAPIRouter(s))
+	// Map subdomains to specific routers
+	subdomainRouters := map[string]http.Handler{
+		"gateway." + base:   GetGatewayRouter(s),
+		"api." + base:       GetFestivalsAPIRouter(s),
+		"discovery." + base: GetDiscoveryRouter(s),
+		"database." + base:  GetFestivalsDatabaseRouter(s),
+		"files." + base:     GetFestivalsFilesAPIRouter(s),
+	}
 
-	// Mount the host router
-	s.Router.Mount("/", hr)
+	s.Router.HandleFunc("/*", func(w http.ResponseWriter, r *http.Request) {
+
+		if handler, ok := subdomainRouters[r.Host]; ok {
+			handler.ServeHTTP(w, r)
+			return
+		}
+		http.Error(w, "403 forbidden", http.StatusForbidden)
+	})
+
+	/*
+		hr.Map("gateway."+base, GetGatewayRouter(s))
+		hr.Map("discovery."+base, GetDiscoveryRouter(s))
+		hr.Map("api."+base, GetFestivalsAPIRouter(s))
+		hr.Map("database."+base, GetFestivalsDatabaseRouter(s))
+		hr.Map("files."+base, GetFestivalsFilesAPIRouter(s))
+
+		// Mount the host router
+		s.Router.Mount("/", hr)
+	*/
 }
 
 func (s *Server) Run(conf *config.Config) {
