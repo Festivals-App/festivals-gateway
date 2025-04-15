@@ -34,7 +34,8 @@ the [website node](https://github.com/Festivals-App/festivals-identity-server) a
 The FestivalsApp Gateway follows a modular structure for clarity and maintainability. The `server` directory manages
 API routes and middleware and the `operation` directory documents deployment and environment. GitHub Actions are in `.github`,
 and `.vscode` provides recommended settings. The entry point is main.go, with dependencies in go.mod and go.sum.
-Refer to [Gateway Documentation](DOCUMENTATION.md) for details on available endpoints.
+
+See the [Gateway Documentation](DOCUMENTATION.md) for details on available endpoints.
 
 The general documentation for the Festivals App is in the [festivals-documentation](https://github.com/festivals-app/festivals-documentation) repository.
 The documentation repository contains architecture information, general deployment documentation, templates and
