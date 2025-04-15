@@ -33,7 +33,7 @@ If you have the authorization to call the given endpoint is determined by your
 #### Making a request with curl
 
 ```bash
-curl -H "Authorization: Bearer <JWT>" --cacert ca.crt --cert client.crt --key client.key https://gateway.festivalsapp.home/info
+curl -H "X-Request-ID: <uuid>" -H "Authorization: Bearer <JWT>" --cacert ca.crt --cert client.crt --key client.key https://gateway.festivalsapp.home/info
 ```
 
 ## Overview
@@ -112,94 +112,21 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 * Codes `200`/`40x`/`50x`
 * `data` or `error` field
 
-
-
-### 📘 API Endpoint Documentation Template (Markdown)
-
-```markdown
-### METHOD `/path`
-
-**Description**  
-Short, clear explanation of what the endpoint does.
-
-**Authorization**  
-`[Type of auth]` – Required role(s): `[ROLE_NAME]`
-
-**Request**
-
-- **Method**: `GET | POST | PUT | DELETE`
-- **URL Params**:  
-  - `:id` (string) – Path variable (optional/required)
-- **Query Params**:  
-  - `?limit` (int) – Number of items to return (optional)
-  - `?sort` (string) – Sort order, e.g. `asc` or `desc` (optional)
-- **Headers**:  
-  - `Authorization: Bearer <token>`
-  - `X-Request-ID: <uuid>` (optional)
-
-**Request Body** *(if applicable)*  
-```json
-{
-  "field": "value"
-}
-```
-
-**Responses**
-
-- **200 OK**
-  ```json
-  {
-    "data": {
-      // response object
-    }
-  }
-  ```
-
-- **4xx Client Error**
-  ```json
-  {
-    "error": "Validation or authentication error"
-  }
-  ```
-
-- **5xx Server Error**
-  ```json
-  {
-    "error": "Unexpected server error"
-  }
-  ```
-
-**Status Codes**
-| Code | Meaning             |
-|------|---------------------|
-| 200  | Success             |
-| 400  | Bad Request         |
-| 401  | Unauthorized        |
-| 403  | Forbidden           |
-| 404  | Not Found           |
-| 500  | Internal Server Error |
-
----
-
-### ✅ Usage Example
-
-```bash
-curl -H "Authorization: Bearer <JWT>"  https://api.example.com/info
-```
-
 #### GET `/version`
 
-Returns the release version of the server running. In production builds this will have the format `v1.0.2` but
+Returns the release version of the server running.
+
+> In production builds this will have the format `v1.0.2` but
 for manual builds this will may be `development`.
 
->Authorization: `JWT` with user role set to `ADMIN`
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 Example:  
   `GET https://gateway.festivalsapp.dev/version`
 
-Returns:
+**Response**
 
-* The version of the server application.
 * Codes `200`/`40x`/`50x`
 * Server version as a string `text/plain`
 
