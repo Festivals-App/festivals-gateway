@@ -80,7 +80,7 @@ It is commonly used for health checks, CI/CD diagnostics, or runtime introspecti
 a `server-info` object containing metadata about the currently running binary, such as build time,
 Git reference, service name, and version.
 
-### `server-info` object
+**`server-info`** object
 
 ```json
 {
@@ -100,6 +100,8 @@ Git reference, service name, and version.
 
 > In production builds, these values are injected at build time and reflect the deployment source and context.
 
+------------------------------------------------------------------------------------
+
 #### GET `/info`
 
 Returns the `server-info`.
@@ -111,6 +113,8 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 * Codes `200`/`40x`/`50x`
 * `data` or `error` field
+
+------------------------------------------------------------------------------------
 
 #### GET `/version`
 
@@ -129,6 +133,8 @@ Example:
 
 * Codes `200`/`40x`/`50x`
 * Server version as a string `text/plain`
+
+------------------------------------------------------------------------------------
 
 #### POST `/update`
 
