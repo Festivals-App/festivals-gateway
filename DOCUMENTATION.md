@@ -1,5 +1,3 @@
-<!--suppress ALL -->
-
 <h1 align="center">
     Festivals Gateway Documentation
 </h1>
@@ -21,11 +19,21 @@
 
 ### Authentication & Authorization
 
-To access the gateway you need to either provide a service key via a custom header or a JWT with your requests authorization header, requests to the loadbalanced services don't need any means of authentication:
+To authenticate to the gateway you need to either provide a service key via a custom header or a JWT
+with your requests authorization header, **requests to the loadbalanced services only need valid mTLS certificates**.
 
-```ini
-Service-Key:<service-key>
-Authorization: Bearer <jwt>
+```text
+Service-Key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+Authorization: Bearer <Header>.<Payload>.<Signatur>
+```
+
+If you have the authorization to call the given endpoint is determined by your
+[user role](https://github.com/Festivals-App/festivals-identity-server/blob/master/auth/user.go).
+
+#### Making a request with curl
+
+```bash
+curl -H "Authorization: Bearer <JWT>" --cacert ca.crt --cert client.crt --key client.key https://gateway.festivalsapp.home/info
 ```
 
 ## Overview
@@ -58,139 +66,239 @@ Authorization: Bearer <jwt>
 
 ------------------------------------------------------------------------------------
 
-## Gateway-Route
+## Gateway Status
 
-The gateway route listens on requests to `https://gateway.hostname` (for Example: <https://gateway.festivalsapp.home>).
+The **gateway routes** serve status-related information and are available at:
 
-## Server Status
+```text
+https://gateway.hostname
+```
 
-Determine the state of the server.
-Info object
+> 📌 Example: `https://gateway.festivalsapp.home`
+
+It is commonly used for health checks, CI/CD diagnostics, or runtime introspection. This route uses
+a `server-info` object containing metadata about the currently running binary, such as build time,
+Git reference, service name, and version.
+
+### `server-info` object
 
 ```json
 {
-    "BuildTime":      string,
-    "GitRef":         string,
-    "Version":        string
+  "BuildTime": "string",
+  "GitRef": "string",
+  "Service": "string",
+  "Version": "string"
 }
 ```
 
-------------------------------------------------------------------------------------
+| Field      | Description                                                                 |
+|------------|-----------------------------------------------------------------------------|
+| `BuildTime` | Timestamp of the binary build. Format: `Sun Apr 13 13:55:44 UTC 2025`       |
+| `GitRef`    | Git reference used for the build. Format: `refs/tags/v2.2.0` [🔗 Git Docs](https://git-scm.com/book/en/v2/Git-Internals-Git-References) |
+| `Service`   | Service identifier. Matches a defined [Service type](https://github.com/Festivals-App/festivals-server-tools/blob/main/heartbeattools.go) |
+| `Version`   | Version tag of the deployed binary. Format: `v2.2.0`                        |
+
+> In production builds, these values are injected at build time and reflect the deployment source and context.
+
 #### GET `/info`
 
-* Authorization: JWT
+Returns the `server-info`.
 
-* Example:  
-  `GET https://gateway.festivalsapp.dev/info`
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-* Returns:
-      * Returns the info object
-      * Codes `200`/`40x`/`50x`
-      * `data` or `error` field
+**Response**
 
-------------------------------------------------------------------------------------
+* Codes `200`/`40x`/`50x`
+* `data` or `error` field
+
+
+
+### 📘 API Endpoint Documentation Template (Markdown)
+
+```markdown
+### METHOD `/path`
+
+**Description**  
+Short, clear explanation of what the endpoint does.
+
+**Authorization**  
+`[Type of auth]` – Required role(s): `[ROLE_NAME]`
+
+**Request**
+
+- **Method**: `GET | POST | PUT | DELETE`
+- **URL Params**:  
+  - `:id` (string) – Path variable (optional/required)
+- **Query Params**:  
+  - `?limit` (int) – Number of items to return (optional)
+  - `?sort` (string) – Sort order, e.g. `asc` or `desc` (optional)
+- **Headers**:  
+  - `Authorization: Bearer <token>`
+  - `X-Request-ID: <uuid>` (optional)
+
+**Request Body** *(if applicable)*  
+```json
+{
+  "field": "value"
+}
+```
+
+**Responses**
+
+- **200 OK**
+  ```json
+  {
+    "data": {
+      // response object
+    }
+  }
+  ```
+
+- **4xx Client Error**
+  ```json
+  {
+    "error": "Validation or authentication error"
+  }
+  ```
+
+- **5xx Server Error**
+  ```json
+  {
+    "error": "Unexpected server error"
+  }
+  ```
+
+**Status Codes**
+| Code | Meaning             |
+|------|---------------------|
+| 200  | Success             |
+| 400  | Bad Request         |
+| 401  | Unauthorized        |
+| 403  | Forbidden           |
+| 404  | Not Found           |
+| 500  | Internal Server Error |
+
+---
+
+### ✅ Usage Example
+
+```bash
+curl -H "Authorization: Bearer <JWT>"  https://api.example.com/info
+```
+
 #### GET `/version`
 
-* Authorization: JWT
+Returns the release version of the server running. In production builds this will have the format `v1.0.2` but
+for manual builds this will may be `development`.
 
-* Example:  
+>Authorization: `JWT` with user role set to `ADMIN`
+
+Example:  
   `GET https://gateway.festivalsapp.dev/version`
- 
-* Returns:
-      * The version of the server application.
-      * Codes `200`/`40x`/`50x`
-      * server version as a string `text/plain`
 
-------------------------------------------------------------------------------------
+Returns:
+
+* The version of the server application.
+* Codes `200`/`40x`/`50x`
+* Server version as a string `text/plain`
+
 #### POST `/update`
 
 Updates to the newest release on github and restarts the service.
 
- * Authorization: JWT
+Authorization: JWT
   
- * Example:  
+Example:  
   `POST https://gateway.festivalsapp.dev/update`
 
- * Returns
+Returns
       * The version of the server application.
       * Codes `202`/`40x`/`50x`
       * server version as a string `text/plain`
 
 ------------------------------------------------------------------------------------
+
 #### GET `/health`
 
- * Authorization: JWT
- 
- * Example:  
+Authorization: JWT
+
+Example:  
   `GET https://gateway.festivalsapp.dev/health`
 
- * Returns
+Returns
       * Always returns HTTP status code 200
       * Code `200`
       * empty `text/plain`
 
 ------------------------------------------------------------------------------------
+
 #### GET `/log`
 
 Returns the service log.
 
- * Authorization: JWT
- 
- * Example:  
+Authorization: JWT
+
+Example:  
   `GET https://gateway.festivalsapp.dev/log`
 
- * Returns
+Returns
       * Returns a string
       * Codes `200`/`40x`/`50x`
       * empty or `text/plain`
 
 ------------------------------------------------------------------------------------
+
 #### GET `/log/trace`
 
 Returns the service trace log.
 
- * Authorization: JWT
- 
- * Example:  
+Authorization: JWT
+
+Example:  
   `GET https://gateway.festivalsapp.dev/log/trace`
 
- * Returns
+Returns
       * Returns a string
       * Codes `200`/`40x`/`50x`
       * empty or `text/plain`
 
 ------------------------------------------------------------------------------------
+
 ## Discovery-Route
 
 The discovery route listens on requests to 'https://discovery.hostname'.
 
 ------------------------------------------------------------------------------------
+
 #### POST `/loversear`
 
- * Authorization: Service key
- 
- * Example:  
+Authorization: Service key
+
+Example:  
   `POST https://discovery.festivalsapp.dev/loversear`
 
- * Returns
+Returns
       * Returns nothing on success but a 202 status code.
       * Code `202`/`400`
       * Empty text or `error` field
 
 ------------------------------------------------------------------------------------
+
 #### GET `/services`
 
- * Authorization: Service key
- 
- * Example:  
+Authorization: Service key
+
+Example:  
   `GET https://discovery.festivalsapp.dev/services`
 
- * Returns
+Returns
       * Returns the currently available `MonitorNode`s.
       * Code `202`/`40x`
       * `data` or `error` field
 
 ------------------------------------------------------------------------------------
+
 ## FestivalsAPI-Route
 
 The FestivalsAPI route loadbalances and proxys requests from 'https://api.hostname' to the apropriate services.
@@ -198,6 +306,7 @@ The FestivalsAPI route loadbalances and proxys requests from 'https://api.hostna
 ####  GET, POST, PATCH, DELETE `/*`
 
 ------------------------------------------------------------------------------------
+
 ## Database-Route
 
 The database route loadbalances and proxys requests from 'https://database.hostname' to the apropriate services.
@@ -205,6 +314,7 @@ The database route loadbalances and proxys requests from 'https://database.hostn
 ####  GET, POST, PATCH, DELETE `/*`
 
 ------------------------------------------------------------------------------------
+
 ## FestivalsFilesAPI-Route
 
 The FestivalsFilesAPI route loadbalances and proxys requests from 'https://files.hostname' to the apropriate services.
