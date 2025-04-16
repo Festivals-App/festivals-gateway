@@ -55,17 +55,13 @@ curl -H "X-Request-ID: <uuid>" -H "Authorization: Bearer <JWT>" --cacert ca.crt 
 
 * GET, POST, PATCH, DELETE      `/*`
 
-[Database-Route](#database-route)
-
-* GET, POST, PATCH, DELETE      `/*`
-
 [FestivalsFilesAPI-Route](#festivalsfilesapi-route)
 
 * GET, POST, PATCH, DELETE      `/*`
 
 ------------------------------------------------------------------------------------
 
-## Gateway Status
+## Gateway Route
 
 The **gateway routes** serve status-related information and are available at:
 
