@@ -109,6 +109,9 @@ Returns the `server-info`.
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
 
+Example:  
+  `GET https://gateway.festivalsapp.home/info`
+
 **Response**
 
 * Codes `200`/`40x`/`50x`
@@ -118,21 +121,21 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 #### GET `/version`
 
-Returns the release version of the server running.
+Returns the release version of the server.
 
-> In production builds this will have the format `v1.0.2` but
+> In production builds this will have the format `v2.2.0` but
 for manual builds this will may be `development`.
+
+Example:  
+  `GET https://gateway.festivalsapp.home/version`
 
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
 
-Example:  
-  `GET https://gateway.festivalsapp.dev/version`
-
 **Response**
 
+* Server version as a string `text/plain`.
 * Codes `200`/`40x`/`50x`
-* Server version as a string `text/plain`
 
 ------------------------------------------------------------------------------------
 
@@ -140,118 +143,161 @@ Example:
 
 Updates to the newest release on github and restarts the service.
 
-Authorization: JWT
-  
 Example:  
-  `POST https://gateway.festivalsapp.dev/update`
+  `POST https://gateway.festivalsapp.home/update`
 
-Returns
-      * The version of the server application.
-      * Codes `202`/`40x`/`50x`
-      * server version as a string `text/plain`
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
+
+**Response**
+
+* The current version and the version the server is updated to as a string `text/plain`. Format: `v2.1.3 => v2.2.0`
+* Codes `202`/`40x`/`50x`
 
 ------------------------------------------------------------------------------------
 
 #### GET `/health`
 
-Authorization: JWT
+A simple health check endpoint that returns a `200 OK` status if the service is running and able to respond.
 
 Example:  
   `GET https://gateway.festivalsapp.dev/health`
 
-Returns
-      * Always returns HTTP status code 200
-      * Code `200`
-      * empty `text/plain`
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
+
+**Response**
+
+* Always returns HTTP status code 200 and an empty response body.
 
 ------------------------------------------------------------------------------------
 
 #### GET `/log`
 
-Returns the service log.
-
-Authorization: JWT
+Returns the info log file as a string, containing all log messages except trace log entries.
 
 Example:  
   `GET https://gateway.festivalsapp.dev/log`
 
-Returns
-      * Returns a string
-      * Codes `200`/`40x`/`50x`
-      * empty or `text/plain`
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
+
+**Response**
+
+* Returns a string as `text/plain`
+* Codes `200`/`40x`/`50x`
 
 ------------------------------------------------------------------------------------
 
 #### GET `/log/trace`
 
-Returns the service trace log.
-
-Authorization: JWT
+Returns the trace log file as a string, containing all remote calls to the server.
 
 Example:  
   `GET https://gateway.festivalsapp.dev/log/trace`
 
-Returns
-      * Returns a string
-      * Codes `200`/`40x`/`50x`
-      * empty or `text/plain`
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
+
+**Response**
+
+* Returns a string as `text/plain`
+* Codes `200`/`40x`/`50x`
 
 ------------------------------------------------------------------------------------
 
 ## Discovery-Route
 
-The discovery route listens on requests to 'https://discovery.hostname'.
+The **discovery routes** provide discovery information and are available at:
+
+```text
+https://discovery.hostname
+```
+
+> 📌 Example: `https://discovery.festivalsapp.home`
+
+The discovery route is commonly used to expose information that helps clients automatically locate
+and interact with services in a distributed system. This route uses a `MonitorNode` object containing
+metadata about a known service including the type of service, the location and the last time the service
+did send a heartbeat.
+
+**`MonitorNode`** object
+
+```json
+{
+  "Type":    "string",
+  "Location": "string",
+  "LastSeen": "string"
+}
+```
+
+| Field      | Description                                                                 |
+|------------|-----------------------------------------------------------------------------|
+| `Type`     | Service identifier. Matches a defined [Service type](https://github.com/Festivals-App/festivals-server-tools/blob/main/heartbeattools.go)  |
+| `Location` | The URL to the service. Format: `https://server-0.festivalsapp.home:10439` |
+| `LastSeen` | The last time the service was registered. Format: `2025-04-16T00:16:17.079845416Z` |
 
 ------------------------------------------------------------------------------------
 
 #### POST `/loversear`
 
-Authorization: Service key
+Registers the heartbeat call from other services.
 
 Example:  
   `POST https://discovery.festivalsapp.dev/loversear`
 
-Returns
-      * Returns nothing on success but a 202 status code.
-      * Code `202`/`400`
-      * Empty text or `error` field
+**Authorization**
+Requires a valid `Service-Key`.
+
+**Response**
+
+* Returns a 202 status code with an empty response body or `error`.
+* Code `202`/`400`
 
 ------------------------------------------------------------------------------------
 
 #### GET `/services`
 
-Authorization: Service key
+Returns all known services as a list of `MonitorNode`s.
 
 Example:  
   `GET https://discovery.festivalsapp.dev/services`
 
-Returns
-      * Returns the currently available `MonitorNode`s.
-      * Code `202`/`40x`
-      * `data` or `error` field
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
+
+**Response**
+
+* Returns the currently available `MonitorNode`s.
+* Code `202`/`40x`
+* `data` or `error` field
 
 ------------------------------------------------------------------------------------
 
 ## FestivalsAPI-Route
 
-The FestivalsAPI route loadbalances and proxys requests from 'https://api.hostname' to the apropriate services.
+The **FestivalsAPI route** loadbalances and proxys requests to available festivals-server services.
 
-####  GET, POST, PATCH, DELETE `/*`
+```text
+https://api.hostname
+```
 
-------------------------------------------------------------------------------------
+> 📌 Example: `https://api.festivalsapp.home/*`
 
-## Database-Route
-
-The database route loadbalances and proxys requests from 'https://database.hostname' to the apropriate services.
-
-####  GET, POST, PATCH, DELETE `/*`
+#### GET, POST, PATCH, DELETE `/*`
 
 ------------------------------------------------------------------------------------
 
 ## FestivalsFilesAPI-Route
 
-The FestivalsFilesAPI route loadbalances and proxys requests from 'https://files.hostname' to the apropriate services.
+The **FestivalsFilesAPI** route loadbalances and proxys requests to available festivals-fileserver services.
 
-####  GET, POST, PATCH, DELETE `/*`
+```text
+https://files.hostname
+```
+
+> 📌 Example: `https://files.festivalsapp.home/*`
+
+#### GET, POST, PATCH, DELETE  `/*`
 
 ------------------------------------------------------------------------------------
