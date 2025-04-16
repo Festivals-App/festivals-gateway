@@ -105,11 +105,11 @@ Git reference, service name, and version.
 
 Returns the `server-info`.
 
-**Authorization**
-Requires a valid `JWT` token with the user role set to `ADMIN`.
-
 Example:  
   `GET https://gateway.festivalsapp.home/info`
+  
+**Authorization**
+Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 **Response**
 
