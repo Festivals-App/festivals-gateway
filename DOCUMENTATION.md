@@ -107,7 +107,7 @@ Returns the `server-info`.
 
 Example:  
   `GET https://gateway.festivalsapp.home/info`
-  
+
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
 
@@ -160,7 +160,7 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 A simple health check endpoint that returns a `200 OK` status if the service is running and able to respond.
 
 Example:  
-  `GET https://gateway.festivalsapp.dev/health`
+  `GET https://gateway.festivalsapp.home/health`
 
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
@@ -176,7 +176,7 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 Returns the info log file as a string, containing all log messages except trace log entries.
 
 Example:  
-  `GET https://gateway.festivalsapp.dev/log`
+  `GET https://gateway.festivalsapp.home/log`
 
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
@@ -193,7 +193,7 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 Returns the trace log file as a string, containing all remote calls to the server.
 
 Example:  
-  `GET https://gateway.festivalsapp.dev/log/trace`
+  `GET https://gateway.festivalsapp.home/log/trace`
 
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
@@ -243,7 +243,7 @@ did send a heartbeat.
 Registers the heartbeat call from other services.
 
 Example:  
-  `POST https://discovery.festivalsapp.dev/loversear`
+  `POST https://discovery.festivalsapp.home/loversear`
 
 **Authorization**
 Requires a valid `Service-Key`.
@@ -260,7 +260,7 @@ Requires a valid `Service-Key`.
 Returns all known services as a list of `MonitorNode`s.
 
 Example:  
-  `GET https://discovery.festivalsapp.dev/services`
+  `GET https://discovery.festivalsapp.home/services`
 
 **Authorization**
 Requires a valid `JWT` token with the user role set to `ADMIN`.
