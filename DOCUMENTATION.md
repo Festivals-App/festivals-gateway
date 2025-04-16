@@ -23,7 +23,7 @@ with your requests authorization header, **requests to the loadbalanced services
 
 ```text
 Service-Key: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-Authorization: Bearer <Header>.<Payload>.<Signatur>
+Authorization: Bearer <JWT>
 ```
 
 If you have the authorization to call the given endpoint is determined by your
