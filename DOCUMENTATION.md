@@ -109,8 +109,8 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 **Response**
 
-* Codes `200`/`40x`/`50x`
 * `data` or `error` field
+* Codes `200`/`40x`/`50x`
 
 ------------------------------------------------------------------------------------
 
@@ -163,7 +163,7 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 **Response**
 
-* Always returns HTTP status code 200 and an empty response body.
+* Always returns `200 OK`
 
 ------------------------------------------------------------------------------------
 
@@ -248,7 +248,7 @@ Requires a valid `Service-Key`.
 
 **Response**
 
-* Returns a 202 status code with an empty response body or `error`.
+* Returns `202 Accepted` on success and `error` on failure.
 * Code `202`/`400`
 
 ------------------------------------------------------------------------------------
@@ -265,9 +265,8 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 
 **Response**
 
-* Returns the currently available `MonitorNode`s.
-* Code `202`/`40x`
 * `data` or `error` field
+* Code `202`/`40x`
 
 ------------------------------------------------------------------------------------
 
