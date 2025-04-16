@@ -170,6 +170,7 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 #### GET `/log`
 
 Returns the info log file as a string, containing all log messages except trace log entries.
+See [loggertools](https://github.com/Festivals-App/festivals-server-tools/blob/main/DOCUMENTATION.md#loggertools) for log format.
 
 Example:  
   `GET https://gateway.festivalsapp.home/log`
@@ -187,6 +188,7 @@ Requires a valid `JWT` token with the user role set to `ADMIN`.
 #### GET `/log/trace`
 
 Returns the trace log file as a string, containing all remote calls to the server.
+See [loggertools](https://github.com/Festivals-App/festivals-server-tools/blob/main/DOCUMENTATION.md#loggertools) for log format.
 
 Example:  
   `GET https://gateway.festivalsapp.home/log/trace`
