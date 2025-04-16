@@ -18,18 +18,8 @@ import (
 	servertools "github.com/Festivals-App/festivals-server-tools"
 )
 
-//"github.com/rs/zerolog/log"
-
-//func GoToFestivalsIdentityAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
-//	goToLoadbalancedHost("festivals-identity-server", conf, w, r)
-//}
-
 func GoToFestivalsAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
 	goToLoadbalancedHost("festivals-server", conf, w, r)
-}
-
-func GoToFestivalsDatabase(conf *config.Config, w http.ResponseWriter, r *http.Request) {
-	goToLoadbalancedHost("festivals-database", conf, w, r)
 }
 
 func GoToFestivalsFilesAPI(conf *config.Config, w http.ResponseWriter, r *http.Request) {
@@ -92,13 +82,8 @@ func serverTLSConfig(conf *config.Config) (*tls.Config, error) {
 
 // Allowed load balanced service identifier
 var loadBalancedServiceIdentifier = []string{
-	"festivals-gateway",
 	"festivals-server",
 	"festivals-fileserver",
-	"festivals-database",
-	"festivals-database-node",
-	"festivals-website",
-	"festivals-website-node",
 }
 
 var Loadbalancer = &loadbalancer.LoadBalancer{

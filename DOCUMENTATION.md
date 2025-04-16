@@ -7,7 +7,6 @@
   <a href="#gateway-route">Gateway-Route</a> •
   <a href="#discovery-route">Discovery-Route</a> •
   <a href="#festivalsapi-route">FestivalsAPI-Route</a> •
-  <a href="#database-route">Database-Route</a> •
   <a href="#festivalsfilesapi-route">FestivalsFilesAPI-Route</a>
 </p>
 

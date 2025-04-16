@@ -83,9 +83,8 @@ func (s *Server) setRoutes() {
 	// Map subdomains to specific routers
 	subdomainRouters := map[string]http.Handler{
 		"gateway." + base:   GetGatewayRouter(s),
-		"api." + base:       GetFestivalsAPIRouter(s),
 		"discovery." + base: GetDiscoveryRouter(s),
-		"database." + base:  GetFestivalsDatabaseRouter(s),
+		"api." + base:       GetFestivalsAPIRouter(s),
 		"files." + base:     GetFestivalsFilesAPIRouter(s),
 	}
 
@@ -95,7 +94,7 @@ func (s *Server) setRoutes() {
 			handler.ServeHTTP(w, r)
 			return
 		}
-		http.Error(w, "403 forbidden", http.StatusForbidden)
+		servertools.RespondError(w, http.StatusForbidden, http.StatusText(http.StatusForbidden))
 	})
 
 	/*
@@ -154,13 +153,6 @@ func GetFestivalsAPIRouter(s *Server) chi.Router {
 
 	r := chi.NewRouter()
 	r.Handle("/*", s.loadbalanceRequest(handler.GoToFestivalsAPI))
-	return r
-}
-
-func GetFestivalsDatabaseRouter(s *Server) chi.Router {
-
-	r := chi.NewRouter()
-	r.Handle("/*", s.loadbalanceRequest(handler.GoToFestivalsDatabase))
 	return r
 }
 
