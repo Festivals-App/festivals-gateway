@@ -86,8 +86,8 @@ Git reference, service name, and version.
 }
 ```
 
-| Field      | Description                                                                 |
-|------------|-----------------------------------------------------------------------------|
+| Field       | Description                                                                 |
+|-------------|-----------------------------------------------------------------------------|
 | `BuildTime` | Timestamp of the binary build. Format: `Sun Apr 13 13:55:44 UTC 2025`       |
 | `GitRef`    | Git reference used for the build. Format: `refs/tags/v2.2.0` [🔗 Git Docs](https://git-scm.com/book/en/v2/Git-Internals-Git-References) |
 | `Service`   | Service identifier. Matches a defined [Service type](https://github.com/Festivals-App/festivals-server-tools/blob/main/heartbeattools.go) |
