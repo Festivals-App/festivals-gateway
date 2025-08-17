@@ -40,7 +40,12 @@ func sendHeartbeat(conf *config.Config) {
 	if err != nil {
 		log.Fatal().Err(err).Str("type", "server").Msg("Failed to create heartbeat client")
 	}
-	var beat *servertools.Heartbeat = &servertools.Heartbeat{Service: "festivals-gateway", Host: "https://gateway." + conf.ServiceBindHost, Port: conf.ServicePort, Available: true}
+	var beat *servertools.Heartbeat = &servertools.Heartbeat{
+		Service:   servertools.Gateway.Value(),
+		Host:      "https://gateway." + conf.ServiceBindHost,
+		Port:      conf.ServicePort,
+		Available: true,
+	}
 
 	t := time.NewTicker(time.Duration(conf.Interval) * time.Second)
 	defer t.Stop()

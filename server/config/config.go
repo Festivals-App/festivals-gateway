@@ -10,7 +10,7 @@ import (
 type Config struct {
 	ServiceBindHost  string
 	ServicePort      int
-	ServiceKey       servertools.Service
+	ServiceKey       string
 	TLSRootCert      string
 	TLSCert          string
 	TLSKey           string
@@ -30,8 +30,7 @@ func ParseConfig(cfgFile string) *Config {
 
 	serviceBindHost := content.Get("service.bind-host").(string)
 	servicePort := content.Get("service.port").(int64)
-	serviceKeyString := content.Get("service.key").(string)
-	serviceKey := servertools.Service(serviceKeyString)
+	serviceKey := content.Get("service.key").(string)
 
 	tlsrootcert := content.Get("tls.festivalsapp-root-ca").(string)
 	tlscert := content.Get("tls.cert").(string)

@@ -46,7 +46,7 @@ func (s *Server) Initialize(config *config.Config) {
 func (s *Server) setIdentityService() {
 
 	config := s.Config
-	val := token.NewValidationService(config.IdentityEndpoint, config.TLSCert, config.TLSKey, config.TLSRootCert, string(config.ServiceKey), true)
+	val := token.NewValidationService(config.IdentityEndpoint, config.TLSCert, config.TLSKey, config.TLSRootCert, config.ServiceKey, true)
 	if val == nil {
 		log.Fatal().Msg("failed to create validator")
 	}
@@ -96,17 +96,6 @@ func (s *Server) setRoutes() {
 		}
 		servertools.RespondError(w, http.StatusForbidden, http.StatusText(http.StatusForbidden))
 	})
-
-	/*
-		hr.Map("gateway."+base, GetGatewayRouter(s))
-		hr.Map("discovery."+base, GetDiscoveryRouter(s))
-		hr.Map("api."+base, GetFestivalsAPIRouter(s))
-		hr.Map("database."+base, GetFestivalsDatabaseRouter(s))
-		hr.Map("files."+base, GetFestivalsFilesAPIRouter(s))
-
-		// Mount the host router
-		s.Router.Mount("/", hr)
-	*/
 }
 
 func (s *Server) Run(conf *config.Config) {
